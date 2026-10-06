@@ -7,6 +7,9 @@
  * File NXT gốc của kế toán chỉ được ĐỌC khi khởi tạo, không bao giờ ghi.
  */
 
+// Chạy trong trình soạn mã (hàm đầu tiên = mặc định khi bấm Chạy): nâng cấp cấu trúc + chép danh mục (an toàn khi chạy lại)
+function chayNangCapVaChepDanhMuc() { upgradeSchema(); seedCatalog(); }
+
 var NXT_CSV_URL = 'https://docs.google.com/spreadsheets/d/1qaUdLFSbPgAYWjP4Cn0mawKORm26CBC1/export?format=csv&gid=667618843';
 var STAFF_NAMES = ['Nguyễn Thành Công', 'Lê Thị Nhàng', 'Lê Quang Toàn'];
 // Nguồn chép danh mục lần đầu (trước khi gỡ file công khai khỏi web app)
