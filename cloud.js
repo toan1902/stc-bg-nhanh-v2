@@ -97,7 +97,7 @@ export function installCloud(api) {
 
   /* ---------- UI: Soạn báo giá ---------- */
   const panel = document.createElement('section'); panel.className = 'card cloud-panel';
-  panel.innerHTML = `<div class="card-title"><h2>05 · Hệ thống chung · Đặt cọc & kho</h2><span id="cloudStatus" class="badge">Chưa kết nối</span></div>
+  panel.innerHTML = `<div class="card-title"><h2><span class="step" id="cloudStep">05</span> Hệ thống chung · Đặt cọc & kho</h2><span id="cloudStatus" class="badge">Chưa kết nối</span></div>
   <p id="cloudInfo" class="muted"></p>
   <div class="cloud-actions"><button id="cloudSave" class="primary">Lưu lên hệ thống</button><button id="cloudSent">Đánh dấu đã gửi khách</button></div>
   <div class="cloud-deposit"><label id="cloudChosenWrap">Phương án khách chọn<select id="cloudChosen"></select></label><label>Số tiền cọc (đ)<input id="cloudAmount" type="number" min="0" step="1000"></label><button id="cloudDeposit" class="primary">Đặt cọc & trừ kho</button></div>
@@ -118,6 +118,8 @@ export function installCloud(api) {
   });
   $('#cloudDeposit').onclick = () => run($('#cloudDeposit'), async () => {
     const q = api.state(); if (!q.items.length) throw Error('Báo giá chưa có sản phẩm.');
+    if (!q.customer?.trim()) { const el = document.querySelector('#customer'); el?.scrollIntoView({ behavior: 'smooth', block: 'center' }); el?.focus({ preventScroll: true }); throw Error('Nhập tên khách hàng trước khi đặt cọc.'); }
+    if (!String(q.phone || '').trim()) { const el = document.querySelector('[data-field=phone]'); el?.scrollIntoView({ behavior: 'smooth', block: 'center' }); el?.focus({ preventScroll: true }); throw Error('Nhập số điện thoại khách trước khi đặt cọc.'); }
     const chosen = q.mode === 'options' ? Number($('#cloudChosen').value) : -1;
     if (q.mode === 'options' && !(chosen >= 0)) throw Error('Chọn phương án khách đặt cọc.');
     const amount = Number($('#cloudAmount').value);
@@ -191,7 +193,7 @@ export function installCloud(api) {
   let lastId = null;
   function render() {
     if (api.state().id !== lastId) { lastId = api.state().id; delete $('#cloudAmount').dataset.touched; }
-    document.body.classList.toggle('cloud-on', connected());
+    document.body.classList.toggle('cloud-on', connected()); $('#cloudStep').textContent = connected() ? '04' : '05';
     $('#userName').textContent = connected() ? '👤 ' + cfg.staff : '';
     $('#cloudConnMsg').textContent = connected() ? '✓ Đang đăng nhập: ' + cfg.staff + ' (tự đăng xuất khi sang ngày mới)' : 'Chưa đăng nhập.';
     const q = api.state(), c = info(), on = connected(), lock = locked();

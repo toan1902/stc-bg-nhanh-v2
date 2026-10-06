@@ -101,3 +101,38 @@ body.cloud-on .picker-onboarding .upload + p,
 body.cloud-on nav .nav:not([data-view]),
 body.cloud-on .device-note{display:none}
 .user-chip{margin-left:auto}
+
+/* V2.1: tối ưu điện thoại (iPhone/Safari) */
+html,body{max-width:100%;overflow-x:hidden}
+.field-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.field-grid>label,.line-fields>*,.stock-line>*{min-width:0}
+input[type=date]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;min-height:44px;text-align:left}
+input[type=date]::-webkit-date-and-time-value{text-align:left}
+select{text-overflow:ellipsis}
+.field-error{border-color:#d92d20!important;box-shadow:0 0 0 3px #fbd5d1}
+#pickerAddStatus{font-size:14px;line-height:1.5}
+@supports(padding:env(safe-area-inset-top)){.topbar{padding-top:max(15px,env(safe-area-inset-top))}main{padding-bottom:calc(40px + env(safe-area-inset-bottom))}#toast{bottom:calc(26px + env(safe-area-inset-bottom))}}
+@media(max-width:600px){
+  main{padding:18px 12px 40px}
+  .card{padding:16px;border-radius:12px}
+  .card-title{flex-wrap:wrap}
+  .heading-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .heading-actions .primary{grid-column:1/-1}
+  input,select,textarea{font-size:16px}
+  .line-top input[data-item=name]{white-space:normal}
+  .line-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0 0}
+  .line-fields label{font-size:12px;line-height:1.3}
+  .line-fields input{font-size:16px;padding:9px 8px}
+  .line-amount{grid-column:1/-1;justify-content:space-between;font-size:16px;padding:8px 10px;background:#f6f8fb;border-radius:8px}
+  .line-amount::before{content:'Thành tiền';font-weight:600;color:var(--muted);font-size:13px}
+  .line-fields>button[data-sync]{grid-column:1/-1;white-space:nowrap;padding:10px}
+  .stock-line{grid-template-columns:1fr}
+  .stock-line select,.stock-line input{font-size:14px;padding:9px}
+  .line-actions{flex-direction:column;align-items:stretch}
+  .line-actions>div{justify-content:flex-start}
+  .line-actions input{width:80px}
+  .cloud-deposit{grid-template-columns:1fr}
+  .cloud-actions button{flex:1 1 100%}
+  .downloads{grid-template-columns:1fr 1fr}
+  .downloads .primary{grid-column:1/-1;order:-1}
+}
