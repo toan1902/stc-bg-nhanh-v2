@@ -54,3 +54,6 @@ index.html: giao diện; style.css: thiết kế; app.js: nhập liệu/xuất f
 - Đọc được định dạng kế toán của CSV: "2.409.000", "-" = 0, "- 1" = âm (bị loại để đối chiếu, không tự nhập).
 - Tháng mới: dán link tab NXT mới (có gid) vào ô rồi bấm cập nhật.
 - Soạn báo giá: bật "Thông minh: ưu tiên hàng còn tồn" (mặc định bật) → hàng còn tồn lên đầu, ghi "✓ Còn N" (đã trừ số lượng đang chọn trong báo giá); hàng hết tồn hiện gợi ý công tắc cùng loại còn tồn để bấm thêm nhanh.
+
+## V2 — Hệ thống chung (Google Sheet): báo giá dùng chung, đặt cọc trừ kho
+Xem hướng dẫn chi tiết: apps-script/HUONG-DAN-HE-THONG-CHUNG.md (mã: apps-script/Code.gs).
