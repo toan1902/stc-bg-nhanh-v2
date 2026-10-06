@@ -1,6 +1,6 @@
 // Hệ thống chung: lưu báo giá, đặt cọc trừ kho, hủy hoàn kho qua Google Sheet (Apps Script web app)
 const KEY = 'stc-cloud-v1';
-export const DEFAULT_URL = '';
+export const DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbykVznrCEOQj8EBbCO-1bRXMC0NULXPi24DCn1DOQJLfADQuwWLhPKlc9lcCv20-BSgJg/exec';
 const LOCKED = ['Đặt cọc', 'Hoàn tất', 'Hủy'];
 const STATUSES = ['Nháp', 'Đã gửi khách', 'Đặt cọc', 'Hoàn tất', 'Hủy'];
 
@@ -8,6 +8,7 @@ export function installCloud(api) {
   const $ = s => document.querySelector(s), e = api.esc;
   let cfg = { url: DEFAULT_URL, pin: '', staff: '' }, rows = null, list = [], busy = false;
   try { Object.assign(cfg, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (err) { /* dùng mặc định */ }
+  if (!cfg.url) cfg.url = DEFAULT_URL;
   const saveCfg = () => { try { localStorage.setItem(KEY, JSON.stringify(cfg)); } catch (err) { api.tell('Không lưu được cấu hình kết nối trên trình duyệt này.'); } };
   const connected = () => !!(cfg.url && cfg.pin && cfg.staff);
   const info = () => { const q = api.state(); return q.cloud && q.cloud.id === q.id ? q.cloud : null; };
@@ -60,7 +61,7 @@ export function installCloud(api) {
     try { const d = await call('ping'); cfg.staff = d.staff; saveCfg(); } catch (err) { cfg = prev; throw err; }
     $('#cloudConnMsg').textContent = '✓ Đã kết nối: ' + cfg.staff; await loadStock(); await loadList(); api.tell('Đã kết nối hệ thống chung — ' + cfg.staff);
   });
-  $('#cloudDisconnect').onclick = () => { cfg = { url: cfg.url, pin: '', staff: '' }; saveCfg(); rows = null; list = []; api.stockChanged(); render(); $('#cloudConnMsg').textContent = 'Đã ngắt kết nối trên máy này.'; };
+  $('#cloudDisconnect').onclick = () => { cfg = { url: cfg.url || DEFAULT_URL, pin: '', staff: '' }; saveCfg(); rows = null; list = []; api.stockChanged(); render(); $('#cloudConnMsg').textContent = 'Đã ngắt kết nối trên máy này.'; };
 
   /* ---------- UI: Soạn báo giá ---------- */
   const panel = document.createElement('section'); panel.className = 'card cloud-panel';
