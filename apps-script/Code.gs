@@ -15,13 +15,29 @@ var LOCKED = ['Đặt cọc', 'Hoàn tất', 'Hủy'];
 var SHEETS = {
   BaoGia: ['Mã báo giá (ID)', 'Số báo giá', 'Ngày', 'Khách hàng', 'Điện thoại', 'Địa chỉ', 'Người lập', 'Loại', 'Cách tính', 'Tổng tiền', 'Trạng thái', 'Tiền cọc', 'Ngày cọc', 'Người chốt cọc', 'Số phiếu xuất', 'Phương án chọn', 'Cập nhật lúc', 'Cập nhật bởi', 'Ghi chú hủy', 'Dữ liệu (không sửa)'],
   ChiTiet: ['Mã báo giá (ID)', 'Số báo giá', 'STT', 'Mã hàng', 'Tên hàng', 'ĐVT', 'Số lượng', 'Đơn giá', 'Giá gốc', 'Thành tiền', 'Không trừ kho'],
-  Kho: ['Mã hàng', 'Tên hàng', 'ĐVT', 'Tồn', 'Cập nhật lúc', 'Ghi chú'],
+  Kho: ['Mã hàng', 'Tên hàng', 'ĐVT', 'Tồn', 'Cập nhật lúc', 'Ghi chú', 'Tồn tối thiểu'],
   PhieuXuat: ['Số phiếu', 'Thời gian', 'Loại', 'Mã báo giá (ID)', 'Số báo giá', 'Khách hàng', 'Mã hàng', 'Tên hàng', 'ĐVT', 'Số lượng', 'Tồn trước', 'Tồn sau', 'Nhân viên'],
-  DoiChieu: ['Dòng NXT', 'Mã hàng', 'Tên hàng', 'Tồn nguồn', 'Lý do chưa nhập']
+  DoiChieu: ['Dòng NXT', 'Mã hàng', 'Tên hàng', 'Tồn nguồn', 'Lý do chưa nhập'],
+  DeXuatNhap: ['Thời gian', 'Loại cảnh báo', 'Mã báo giá (ID)', 'Số báo giá', 'Khách hàng', 'Nhân viên', 'Mã hàng', 'Tên hàng', 'ĐVT', 'Cần', 'Tồn hiện tại', 'Thiếu', 'Tồn tối thiểu', 'Đề xuất nhập', 'Trạng thái', 'Ghi chú xử lý']
 };
+// Trạng thái đề xuất nhập: kế toán đổi tay trên Sheet
+var ALERT_OPEN = 'Chờ xử lý', ALERT_DONE = ['Đã nhập', 'Bỏ qua'];
 // Cột (bắt đầu từ 0) của tab BaoGia
 // Cột để dạng chữ (tránh Google Sheet tự đổi ngày giờ, mã hàng, số điện thoại)
-var TEXT_COLS = {BaoGia: ['A', 'B', 'C', 'E', 'M', 'Q'], ChiTiet: ['A', 'B', 'D'], Kho: ['A', 'E'], PhieuXuat: ['A', 'B', 'D', 'E', 'G']};
+var TEXT_COLS = {BaoGia: ['A', 'B', 'C', 'E', 'M', 'Q'], ChiTiet: ['A', 'B', 'D'], Kho: ['A', 'E'], PhieuXuat: ['A', 'B', 'D', 'E', 'G'], DeXuatNhap: ['A', 'C', 'D', 'G']};
+
+// Tạo tab / bổ sung cột tiêu đề còn thiếu (dùng cho cả file đã khởi tạo từ bản trước)
+function ensureSheet(name) {
+  var ss = SpreadsheetApp.getActive(), sh = ss.getSheetByName(name) || ss.insertSheet(name), head = SHEETS[name];
+  var cur = sh.getLastRow() ? sh.getRange(1, 1, 1, head.length).getValues()[0] : [];
+  if (cur.join('|') !== head.join('|')) {
+    var fixed = head.map(function (h, i) { return cur[i] ? cur[i] : h; });
+    sh.getRange(1, 1, 1, head.length).setValues([fixed]).setFontWeight('bold').setBackground('#061b49').setFontColor('#ffffff');
+    sh.setFrozenRows(1);
+    (TEXT_COLS[name] || []).forEach(function (c) { sh.getRange(c + ':' + c).setNumberFormat('@'); });
+  }
+  return sh;
+}
 function cell(v) { return v instanceof Date ? Utilities.formatDate(v, TZ, 'dd/MM/yyyy HH:mm') : v; }
 var B = {id: 0, number: 1, date: 2, customer: 3, phone: 4, address: 5, preparedBy: 6, type: 7, mode: 8, total: 9, status: 10, deposit: 11, depositAt: 12, depositBy: 13, slip: 14, chosen: 15, updatedAt: 16, updatedBy: 17, cancelNote: 18, meta: 19};
 
@@ -30,22 +46,21 @@ var B = {id: 0, number: 1, date: 2, customer: 3, phone: 4, address: 5, preparedB
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('STC Báo Giá')
     .addItem('1. Khởi tạo hệ thống (chạy 1 lần)', 'setupSystem')
+    .addItem('2. Nâng cấp cấu trúc (sau khi cập nhật mã)', 'upgradeSchema')
     .addItem('Xem mã PIN nhân viên', 'showPins')
     .addItem('Đổi mã PIN nhân viên', 'resetPins')
     .addToUi();
 }
 
+// Bổ sung tab/cột mới cho file đã khởi tạo; không đụng dữ liệu, không hiện PIN
+function upgradeSchema() {
+  for (var name in SHEETS) ensureSheet(name);
+  notify('STC Báo Giá', 'Đã cập nhật cấu trúc: tab DeXuatNhap (cảnh báo & đề xuất nhập), cột "Tồn tối thiểu" ở tab Kho. Dữ liệu cũ giữ nguyên.');
+}
+
 function setupSystem() {
   var ss = SpreadsheetApp.getActive();
-  for (var name in SHEETS) {
-    var sh = ss.getSheetByName(name) || ss.insertSheet(name);
-    if (sh.getLastRow() === 0) {
-      sh.appendRow(SHEETS[name]);
-      sh.getRange(1, 1, 1, SHEETS[name].length).setFontWeight('bold').setBackground('#061b49').setFontColor('#ffffff');
-      sh.setFrozenRows(1);
-    }
-    (TEXT_COLS[name] || []).forEach(function (c) { sh.getRange(c + ':' + c).setNumberFormat('@'); });
-  }
+  for (var name in SHEETS) ensureSheet(name);
   var first = ss.getSheetByName('Sheet1') || ss.getSheetByName('Trang tính1');
   if (first && first.getLastRow() === 0 && ss.getSheets().length > 1) ss.deleteSheet(first);
 
@@ -155,6 +170,7 @@ var ACTIONS = {
   ping: function () { return {}; },
   stock: function () { return {rows: readKho().list}; },
   list: function () { return {quotes: listQuotes()}; },
+  alerts: function () { return {alerts: listAlerts()}; },
   get: function (req) { return {quote: getQuote(req.id)}; },
   save: function (req, staff) { return withLock(function () { return saveQuote(req.quote, staff, null); }); },
   sent: function (req, staff) { return withLock(function () { return setStatus(req.id, 'Đã gửi khách', ['Nháp'], staff); }); },
@@ -268,8 +284,8 @@ function setStatus(id, status, from, staff) {
 function readKho() {
   var sh = sheet('Kho'), rows = body(sh), map = {}, list = [];
   rows.forEach(function (r, i) {
-    var x = {id: String(r[0]), name: String(r[1]), unit: String(r[2]), quantity: Number(r[3]) || 0, row: i + 2};
-    map[x.id] = x; list.push({id: x.id, name: x.name, unit: x.unit, quantity: x.quantity});
+    var x = {id: String(r[0]), name: String(r[1]), unit: String(r[2]), quantity: Number(r[3]) || 0, min: Number(r[6]) || 0, row: i + 2};
+    map[x.id] = x; list.push({id: x.id, name: x.name, unit: x.unit, quantity: x.quantity, min: x.min});
   });
   return {sheet: sh, map: map, list: list};
 }
@@ -293,18 +309,26 @@ function needsOf(q, chosen) {
 function deposit(req, staff) {
   var q = req.quote, amount = Number(req.amount);
   if (!(amount >= 0)) throw new Error('Nhập số tiền cọc hợp lệ.');
+  ensureSheet('Kho'); ensureSheet('DeXuatNhap');
   saveQuote(q, staff, null);
   var sh = sheet('BaoGia'), row = findRow(sh, q.id), cur = sh.getRange(row, B.status + 1).getValue();
   if (['Nháp', 'Đã gửi khách'].indexOf(cur) < 0) throw new Error('Báo giá đang "' + cur + '", không đặt cọc được.');
   var chosen = q.mode === 'options' ? Number(req.chosen) : '';
-  var kho = readKho(), lines = needsOf(q, chosen), problems = [], untracked = [];
+  var kho = readKho(), lines = needsOf(q, chosen), problems = [], untracked = [], short = [];
   lines.forEach(function (n) {
     var s = kho.map[n.id];
     if (!s) { untracked.push(n.name); n.skip = true; return; }
     if (s.unit !== n.unit) problems.push(n.name + ': đơn vị kho "' + s.unit + '" khác báo giá "' + n.unit + '"');
-    else if (s.quantity < n.quantity) problems.push(n.name + ': cần ' + n.quantity + ', kho còn ' + s.quantity);
+    else if (s.quantity < n.quantity) {
+      var miss = Math.round((n.quantity - s.quantity) * 10000) / 10000;
+      problems.push(n.name + ': cần ' + n.quantity + ', kho còn ' + s.quantity + ' → thiếu ' + miss);
+      short.push({type: 'Thiếu hàng khi đặt cọc', id: n.id, name: n.name, unit: n.unit, need: n.quantity, have: s.quantity, miss: miss, min: s.min, suggest: Math.round((miss + s.min) * 10000) / 10000});
+    }
   });
-  if (problems.length) throw new Error('Không đủ tồn để đặt cọc:\n' + problems.join('\n'));
+  if (problems.length) {
+    if (short.length) addAlerts(short, q, staff);
+    throw new Error('Không đủ tồn để đặt cọc:\n' + problems.join('\n') + (short.length ? '\n→ Đã tự ghi cảnh báo & đề xuất nhập hàng (tab DeXuatNhap) để kế toán xử lý.' : ''));
+  }
   var now = stamp(), slip = nextSlip(), log = [];
   lines.forEach(function (n) {
     if (n.skip) return;
@@ -316,7 +340,43 @@ function deposit(req, staff) {
   if (log.length) { var px = sheet('PhieuXuat'); px.getRange(px.getLastRow() + 1, 1, log.length, log[0].length).setValues(log); }
   sh.getRange(row, B.status + 1, 1, 6).setValues([['Đặt cọc', amount, now, staff, log.length ? slip : '(không có hàng theo dõi tồn)', chosen === '' ? '' : 'Phương án ' + (chosen + 1)]]);
   sh.getRange(row, B.updatedAt + 1, 1, 2).setValues([[now, staff]]);
-  return {status: 'Đặt cọc', slip: log.length ? slip : '', deducted: log.length, untracked: untracked, rows: kho.list.map(function (x) { var m = kho.map[x.id]; return {id: x.id, name: x.name, unit: x.unit, quantity: m.quantity}; })};
+  // Cảnh báo sau khi trừ: hết hàng, hoặc dưới mức tồn tối thiểu (cột G tab Kho)
+  var low = [];
+  lines.forEach(function (n) {
+    if (n.skip) return;
+    var s = kho.map[n.id];
+    if (s.quantity <= 0 || (s.min > 0 && s.quantity < s.min)) {
+      low.push({type: s.quantity <= 0 ? 'Hết hàng sau đặt cọc' : 'Dưới tồn tối thiểu', id: n.id, name: n.name, unit: n.unit, need: '', have: s.quantity, miss: '', min: s.min || '', suggest: s.min > 0 ? Math.round((s.min - s.quantity) * 10000) / 10000 : ''});
+    }
+  });
+  if (low.length) addAlerts(low, null, staff);
+  return {status: 'Đặt cọc', slip: log.length ? slip : '', deducted: log.length, untracked: untracked, alerts: low.map(function (a) { return a.type + ': ' + a.name + ' (còn ' + a.have + ')'; }),
+    rows: kho.list.map(function (x) { var m = kho.map[x.id]; return {id: x.id, name: x.name, unit: x.unit, quantity: m.quantity, min: m.min}; })};
+}
+
+// Ghi / cập nhật cảnh báo & đề xuất nhập. Trùng (cùng loại, mã hàng, báo giá) mà còn "Chờ xử lý" thì cập nhật dòng cũ, không nhân đôi.
+function addAlerts(items, q, staff) {
+  var sh = ensureSheet('DeXuatNhap'), rows = body(sh), now = stamp(), add = [];
+  items.forEach(function (a) {
+    var qid = q ? q.id : '', rec = [now, a.type, qid, q ? (q.number || '') : '', q ? (q.customer || '') : '', staff, a.id, a.name, a.unit, a.need, a.have, a.miss, a.min, a.suggest, ALERT_OPEN,
+      a.suggest === '' ? 'Điền cột "Tồn tối thiểu" ở tab Kho để app tự tính số đề xuất' : ''];
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      if (r[1] === a.type && String(r[6]) === String(a.id) && String(r[2]) === String(qid) && r[14] === ALERT_OPEN) {
+        sh.getRange(i + 2, 1, 1, rec.length).setValues([rec]); return;
+      }
+    }
+    add.push(rec);
+  });
+  if (add.length) sh.getRange(sh.getLastRow() + 1, 1, add.length, add[0].length).setValues(add);
+}
+
+function listAlerts() {
+  var sh = SpreadsheetApp.getActive().getSheetByName('DeXuatNhap');
+  if (!sh) return [];
+  return body(sh).map(function (r) { return r.map(cell); }).filter(function (r) { return ALERT_DONE.indexOf(r[14]) < 0; }).map(function (r) {
+    return {time: r[0], type: r[1], number: r[3], customer: r[4], staff: r[5], id: r[6], name: r[7], unit: r[8], need: r[9], have: r[10], miss: r[11], min: r[12], suggest: r[13], status: r[14], note: r[15]};
+  }).reverse();
 }
 
 function nextSlip() {

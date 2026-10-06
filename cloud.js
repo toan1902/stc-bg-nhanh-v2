@@ -59,7 +59,7 @@ export function installCloud(api) {
     if (!/^\d{6}$/.test(pin)) throw Error('PIN gồm 6 chữ số.');
     const prev = { ...cfg }; cfg.url = url; cfg.pin = pin;
     try { const d = await call('ping'); cfg.staff = d.staff; saveCfg(); } catch (err) { cfg = prev; throw err; }
-    $('#cloudConnMsg').textContent = '✓ Đã kết nối: ' + cfg.staff; await loadStock(); await loadList(); api.tell('Đã kết nối hệ thống chung — ' + cfg.staff);
+    $('#cloudConnMsg').textContent = '✓ Đã kết nối: ' + cfg.staff; await loadStock(); await loadList(); await loadAlerts(); api.tell('Đã kết nối hệ thống chung — ' + cfg.staff);
   });
   $('#cloudDisconnect').onclick = () => { cfg = { url: cfg.url || DEFAULT_URL, pin: '', staff: '' }; saveCfg(); rows = null; list = []; api.stockChanged(); render(); $('#cloudConnMsg').textContent = 'Đã ngắt kết nối trên máy này.'; };
 
@@ -96,10 +96,12 @@ export function installCloud(api) {
       return s ? `• ${i.name}: trừ ${api.number(i.quantity)} ${i.unit}, tồn ${api.number(s.quantity)} → ${api.number(s.quantity - i.quantity)}` : `• ${i.name}: không theo dõi tồn — không trừ kho`;
     }).join('\n') || '• Không có hàng theo dõi tồn.';
     if (!await api.confirm('Đặt cọc & trừ kho?', `${q.number} · ${q.customer || 'Chưa có tên khách'}\nTiền cọc: ${api.money(amount)}${q.mode === 'options' ? '\nPhương án ' + (chosen + 1) + ': ' + q.items[chosen].name : ''}\n${text}\nSau khi cọc, báo giá bị khóa (muốn sửa phải nhân bản).`)) return;
-    const d = await call('deposit', { quote: payload(chosen), amount, chosen: chosen >= 0 ? chosen : undefined });
+    let d;
+    try { d = await call('deposit', { quote: payload(chosen), amount, chosen: chosen >= 0 ? chosen : undefined }); }
+    catch (err) { loadAlerts().catch(() => {}); throw err; }
     apply(d, { deposit: amount, depositBy: cfg.staff, slip: d.slip, chosen: chosen >= 0 ? 'Phương án ' + (chosen + 1) : '' });
-    msg(`✓ Đã đặt cọc ${api.money(amount)}. ` + (d.slip ? `Phiếu ${d.slip}: trừ ${d.deducted} mã hàng.` : 'Không có hàng theo dõi tồn nên không trừ kho.') + (d.untracked?.length ? '\nKhông theo dõi tồn: ' + d.untracked.join(', ') : ''));
-    loadList();
+    msg(`✓ Đã đặt cọc ${api.money(amount)}. ` + (d.slip ? `Phiếu ${d.slip}: trừ ${d.deducted} mã hàng.` : 'Không có hàng theo dõi tồn nên không trừ kho.') + (d.untracked?.length ? '\nKhông theo dõi tồn: ' + d.untracked.join(', ') : '') + (d.alerts?.length ? '\n⚠ ' + d.alerts.join('\n⚠ ') + '\n→ Đã ghi đề xuất nhập hàng cho kế toán.' : ''));
+    loadList(); loadAlerts();
   });
   $('#cloudComplete').onclick = () => run($('#cloudComplete'), async () => {
     if (!await api.confirm('Hoàn tất báo giá?', 'Xác nhận đã giao hàng/thi công và thu đủ tiền.')) return;
@@ -118,7 +120,21 @@ export function installCloud(api) {
   <div class="variant-filters"><label>Trạng thái<select id="cloudFStatus"><option value="">Tất cả</option>${STATUSES.map(s => `<option>${s}</option>`).join('')}</select></label><label>Nhân viên<select id="cloudFStaff"><option value="">Tất cả</option></select></label><label>Tìm khách / số báo giá<input id="cloudFind"></label></div>
   <div id="cloudSummary" class="muted"></div><div id="cloudRows" class="saved-list"></div>`;
   $('#history').insertBefore(box, $('#savedList'));
-  $('#cloudRefresh').onclick = () => run($('#cloudRefresh'), loadList);
+
+  // Cảnh báo tồn kho & đề xuất nhập hàng (tab DeXuatNhap trên Sheet)
+  const warnBox = document.createElement('section'); warnBox.className = 'card cloud-alerts';
+  warnBox.innerHTML = `<div class="card-title"><h2>⚠ Cảnh báo tồn kho & đề xuất nhập hàng</h2><span id="alertCount" class="badge">0 việc</span></div>
+  <p class="muted">Tự ghi khi đặt cọc bị thiếu hàng, hoặc sau khi cọc mà tồn hết / dưới mức tối thiểu. Kế toán xử lý ở tab <b>DeXuatNhap</b> trên Google Sheet (đổi Trạng thái thành “Đã đặt hàng”, “Đã nhập” hoặc “Bỏ qua”).</p>
+  <div class="table-scroll"><table class="data-table"><thead><tr><th>Thời gian</th><th>Loại</th><th>Hàng</th><th>Cần</th><th>Tồn</th><th>Thiếu</th><th>Đề xuất nhập</th><th>Báo giá · khách</th><th>Trạng thái</th></tr></thead><tbody id="alertRows"></tbody></table></div>`;
+  $('#history').insertBefore(warnBox, $('#savedList'));
+  let alerts = [];
+  async function loadAlerts() { if (!connected()) return; const d = await call('alerts'); alerts = d.alerts || []; renderAlerts(); }
+  function renderAlerts() {
+    $('#alertCount').textContent = alerts.length + ' việc';
+    $('#alertRows').innerHTML = alerts.map(a => `<tr><td>${e(a.time)}</td><td><b class="${/Thiếu|Hết/.test(a.type) ? 'stock-danger' : ''}">${e(a.type)}</b></td><td>${e(a.name)}<br><small class="muted">${e(a.id)} · ${e(a.unit)}</small></td><td>${e(a.need)}</td><td>${e(a.have)}</td><td>${e(a.miss)}</td><td><b>${e(a.suggest)}</b>${a.note ? `<br><small class="muted">${e(a.note)}</small>` : ''}</td><td>${e(a.number)}${a.customer ? ' · ' + e(a.customer) : ''}<br><small class="muted">${e(a.staff)}</small></td><td>${e(a.status)}</td></tr>`).join('')
+      || `<tr><td colspan="9" class="muted">${connected() ? 'Không có cảnh báo nào đang chờ xử lý.' : 'Chưa kết nối hệ thống chung.'}</td></tr>`;
+  }
+  $('#cloudRefresh').onclick = () => run($('#cloudRefresh'), async () => { await loadList(); await loadAlerts(); });
   ['#cloudFStatus', '#cloudFStaff', '#cloudFind'].forEach(s => $(s).oninput = renderList);
   $('#cloudRows').onclick = ev => {
     const b = ev.target.closest('[data-cloud-open]'); if (!b) return;
@@ -167,7 +183,7 @@ export function installCloud(api) {
   }
   $('#cloudAmount').oninput = ev => { ev.target.dataset.touched = '1'; };
 
-  render(); renderList();
-  if (connected()) { loadStock().then(loadList).catch(err => api.tell('Hệ thống chung: ' + err.message)); }
+  render(); renderList(); renderAlerts();
+  if (connected()) { loadStock().then(loadList).then(loadAlerts).catch(err => api.tell('Hệ thống chung: ' + err.message)); }
   return { stock: () => (connected() ? rows : null), locked, render, refresh: () => run(null, async () => { await loadStock(); await loadList(); }) };
 }
