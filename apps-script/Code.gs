@@ -8,7 +8,9 @@
  */
 
 var NXT_CSV_URL = 'https://docs.google.com/spreadsheets/d/1qaUdLFSbPgAYWjP4Cn0mawKORm26CBC1/export?format=csv&gid=667618843';
-var STAFF_NAMES = ['Nguyễn Thành Công', 'Lê Thị Nhàng'];
+var STAFF_NAMES = ['Nguyễn Thành Công', 'Lê Thị Nhàng', 'Lê Quang Toàn'];
+// Nguồn chép danh mục lần đầu (trước khi gỡ file công khai khỏi web app)
+var SEED_BASE = 'https://stc-bg-nhanh-v2.vercel.app/assets/';
 var TZ = 'Asia/Ho_Chi_Minh';
 var LOCKED = ['Đặt cọc', 'Hoàn tất', 'Hủy'];
 
@@ -18,13 +20,15 @@ var SHEETS = {
   Kho: ['Mã hàng', 'Tên hàng', 'ĐVT', 'Tồn', 'Cập nhật lúc', 'Ghi chú', 'Tồn tối thiểu'],
   PhieuXuat: ['Số phiếu', 'Thời gian', 'Loại', 'Mã báo giá (ID)', 'Số báo giá', 'Khách hàng', 'Mã hàng', 'Tên hàng', 'ĐVT', 'Số lượng', 'Tồn trước', 'Tồn sau', 'Nhân viên'],
   DoiChieu: ['Dòng NXT', 'Mã hàng', 'Tên hàng', 'Tồn nguồn', 'Lý do chưa nhập'],
-  DeXuatNhap: ['Thời gian', 'Loại cảnh báo', 'Mã báo giá (ID)', 'Số báo giá', 'Khách hàng', 'Nhân viên', 'Mã hàng', 'Tên hàng', 'ĐVT', 'Cần', 'Tồn hiện tại', 'Thiếu', 'Tồn tối thiểu', 'Đề xuất nhập', 'Trạng thái', 'Ghi chú xử lý']
+  DeXuatNhap: ['Thời gian', 'Loại cảnh báo', 'Mã báo giá (ID)', 'Số báo giá', 'Khách hàng', 'Nhân viên', 'Mã hàng', 'Tên hàng', 'ĐVT', 'Cần', 'Tồn hiện tại', 'Thiếu', 'Tồn tối thiểu', 'Đề xuất nhập', 'Trạng thái', 'Ghi chú xử lý'],
+  DanhMuc: ['Mã hàng', 'Tên hàng', 'ĐVT', 'Đơn giá (sau VAT)', 'Nhóm', 'Ghi chú'],
+  CauHinh: ['Khóa', 'Giá trị (JSON — sửa cẩn thận)', 'Ghi chú']
 };
 // Trạng thái đề xuất nhập: kế toán đổi tay trên Sheet
 var ALERT_OPEN = 'Chờ xử lý', ALERT_DONE = ['Đã nhập', 'Bỏ qua'];
 // Cột (bắt đầu từ 0) của tab BaoGia
 // Cột để dạng chữ (tránh Google Sheet tự đổi ngày giờ, mã hàng, số điện thoại)
-var TEXT_COLS = {BaoGia: ['A', 'B', 'C', 'E', 'M', 'Q'], ChiTiet: ['A', 'B', 'D'], Kho: ['A', 'E'], PhieuXuat: ['A', 'B', 'D', 'E', 'G'], DeXuatNhap: ['A', 'C', 'D', 'G']};
+var TEXT_COLS = {BaoGia: ['A', 'B', 'C', 'E', 'M', 'Q'], ChiTiet: ['A', 'B', 'D'], Kho: ['A', 'E'], PhieuXuat: ['A', 'B', 'D', 'E', 'G'], DeXuatNhap: ['A', 'C', 'D', 'G'], DanhMuc: ['A'], CauHinh: ['A', 'B']};
 
 // Tạo tab / bổ sung cột tiêu đề còn thiếu (dùng cho cả file đã khởi tạo từ bản trước)
 function ensureSheet(name) {
@@ -47,6 +51,7 @@ function onOpen() {
   SpreadsheetApp.getUi().createMenu('STC Báo Giá')
     .addItem('1. Khởi tạo hệ thống (chạy 1 lần)', 'setupSystem')
     .addItem('2. Nâng cấp cấu trúc (sau khi cập nhật mã)', 'upgradeSchema')
+    .addItem('3. Chép danh mục giá vào tab DanhMuc (1 lần)', 'seedCatalog')
     .addItem('Xem mã PIN nhân viên', 'showPins')
     .addItem('Đổi mã PIN nhân viên', 'resetPins')
     .addToUi();
@@ -55,7 +60,49 @@ function onOpen() {
 // Bổ sung tab/cột mới cho file đã khởi tạo; không đụng dữ liệu, không hiện PIN
 function upgradeSchema() {
   for (var name in SHEETS) ensureSheet(name);
-  notify('STC Báo Giá', 'Đã cập nhật cấu trúc: tab DeXuatNhap (cảnh báo & đề xuất nhập), cột "Tồn tối thiểu" ở tab Kho. Dữ liệu cũ giữ nguyên.');
+  var added = ensurePins();
+  notify('STC Báo Giá', 'Đã cập nhật cấu trúc (DanhMuc, CauHinh, DeXuatNhap, cột "Tồn tối thiểu"). Dữ liệu cũ giữ nguyên.' +
+    (added.length ? '\nĐã tạo PIN mới cho: ' + added.join(', ') + ' (PIN cũ của nhân viên giữ nguyên). Xem ở menu "Xem mã PIN".' : ''));
+}
+
+// Chép danh mục giá từ file công khai cũ vào tab DanhMuc/CauHinh (chạy 1 lần, không ghi đè nếu đã có)
+function seedCatalog() {
+  var dm = ensureSheet('DanhMuc'), ch = ensureSheet('CauHinh');
+  if (dm.getLastRow() > 1) { notify('STC Báo Giá', 'Tab DanhMuc đã có ' + (dm.getLastRow() - 1) + ' mã — giữ nguyên, không chép lại.'); return; }
+  function get(f) { var r = UrlFetchApp.fetch(SEED_BASE + f, {muteHttpExceptions: true}); if (r.getResponseCode() !== 200) throw new Error('Không đọc được ' + f + ' (' + r.getResponseCode() + ')'); return JSON.parse(r.getContentText('UTF-8')); }
+  var list = get('list-prices-v8.json').products, curtain = get('curtain-fpt.json'), gate = get('gate-products.json'), base = get('prices.json').products, sample = get('sample.json');
+  var drop = {}; curtain.removeIds.concat(Object.keys(curtain.mergeIds || {})).forEach(function (id) { drop[id] = 1; });
+  var seen = {}, rows = [];
+  function add(p, group) { if (drop[p.id] || seen[p.id]) return; seen[p.id] = 1; rows.push([String(p.id), p.name, p.unit, Number(p.unitPrice), group, '']); }
+  list.forEach(function (p) { add(p, 'FPT · NXT T09/2026'); });
+  curtain.products.forEach(function (p) { add(p, 'Rèm kéo ngang FPT'); });
+  gate.products.forEach(function (p) { add(p, 'Động cơ cổng'); });
+  base.forEach(function (p) { add(p, 'Mã mẫu (chọn mã thật khi chốt)'); });
+  dm.getRange(2, 1, rows.length, rows[0].length).setValues(rows);
+  var g = JSON.parse(JSON.stringify(gate)); delete g.products;
+  var cfg = [['gate', JSON.stringify(g), 'Thông số, thành phần, yêu cầu kỹ thuật, mẫu 3 phương án & ưu đãi động cơ cổng'],
+    ['sample', JSON.stringify(sample), 'Báo giá mẫu 7 sản phẩm + thông tin công ty mặc định']];
+  ch.getRange(ch.getLastRow() + 1, 1, cfg.length, 3).setValues(cfg);
+  notify('STC Báo Giá', 'Đã chép ' + rows.length + ' mã vào tab DanhMuc và cấu hình động cơ cổng / báo giá mẫu vào tab CauHinh.');
+}
+
+function readConfig() {
+  var sh = SpreadsheetApp.getActive().getSheetByName('CauHinh'), out = {};
+  if (!sh) return out;
+  body(sh).forEach(function (r) { if (!r[0]) return; try { out[String(r[0])] = JSON.parse(String(r[1])); } catch (e) { throw new Error('Tab CauHinh, khóa "' + r[0] + '": JSON lỗi, kiểm tra lại dấu ngoặc/dấu phẩy.'); } });
+  return out;
+}
+
+function listCatalog() {
+  var sh = SpreadsheetApp.getActive().getSheetByName('DanhMuc');
+  if (!sh) throw new Error('Chưa có tab DanhMuc.');
+  var seen = {}, out = [];
+  body(sh).forEach(function (r) {
+    var id = text(r[0]), name = text(r[1]), unit = text(r[2]), price = num(r[3]);
+    if (!id || !name || !unit || seen[id] || !(price >= 0) || Math.round(price) !== price) return;
+    seen[id] = 1; out.push({id: id, name: name, unit: unit, unitPrice: price});
+  });
+  return out;
 }
 
 function setupSystem() {
@@ -80,8 +127,7 @@ function setupSystem() {
     if (issues.length) dc.getRange(dc.getLastRow() + 1, 1, issues.length, issues[0].length).setValues(issues);
     msg = 'Đã khởi tạo kho: ' + rows.length + ' mã từ NXT (' + data.period + ').\n' + issues.length + ' dòng cần đối chiếu — xem tab DoiChieu.\n';
   }
-  var props = PropertiesService.getScriptProperties();
-  if (!props.getProperty('STAFF')) makePins();
+  ensurePins();
   notify('STC Báo Giá', msg + '\n' + pinText() + '\n\nBước tiếp theo: Triển khai → Tùy chọn triển khai mới → Ứng dụng web.');
 }
 
@@ -99,6 +145,18 @@ function makePins() {
     used[pin] = 1; staff[pin] = n;
   });
   PropertiesService.getScriptProperties().setProperty('STAFF', JSON.stringify(staff));
+}
+// Chỉ tạo PIN cho người chưa có; PIN đang dùng giữ nguyên
+function ensurePins() {
+  var props = PropertiesService.getScriptProperties(), staff = JSON.parse(props.getProperty('STAFF') || '{}'), have = {}, added = [];
+  Object.keys(staff).forEach(function (p) { have[staff[p]] = 1; });
+  STAFF_NAMES.forEach(function (n) {
+    if (have[n]) return;
+    var pin; do { pin = String(100000 + Math.floor(Math.random() * 900000)); } while (staff[pin]);
+    staff[pin] = n; added.push(n);
+  });
+  if (added.length) props.setProperty('STAFF', JSON.stringify(staff));
+  return added;
 }
 function pinText() {
   var staff = JSON.parse(PropertiesService.getScriptProperties().getProperty('STAFF') || '{}');
@@ -171,6 +229,7 @@ var ACTIONS = {
   stock: function () { return {rows: readKho().list}; },
   list: function () { return {quotes: listQuotes()}; },
   alerts: function () { return {alerts: listAlerts()}; },
+  catalog: function () { var c = readConfig(); return {products: listCatalog(), gate: c.gate || null, sample: c.sample || null}; },
   get: function (req) { return {quote: getQuote(req.id)}; },
   save: function (req, staff) { return withLock(function () { return saveQuote(req.quote, staff, null); }); },
   sent: function (req, staff) { return withLock(function () { return setStatus(req.id, 'Đã gửi khách', ['Nháp'], staff); }); },
