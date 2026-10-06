@@ -1,0 +1,13 @@
+{
+  "version": "curtain-fpt-v2",
+  "source": "Báo giá FPT do Giám đốc STC gửi ngày 06/10/2026: Động cơ và phụ kiện rèm cửa kéo ngang 3.774.000đ/Bộ, Thanh ray rèm kéo ngang 550.000đ/mét (giá trước chiết khấu 10%). Mã FPT-REM-xxx là mã nội bộ.",
+  "products": [
+    { "id": "FPT-REM-KN-BO", "name": "Động cơ và phụ kiện rèm cửa kéo ngang (220V, 1,5N.m, 80W, IP41)", "unit": "Bộ", "unitPrice": 3774000 },
+    { "id": "FPT-RAY-KN-M", "name": "Thanh ray rèm kéo ngang (nhôm sơn tĩnh điện, mở 1 hoặc 2 bên)", "unit": "mét", "unitPrice": 550000 }
+  ],
+  "removeIds": [
+    "20041058", "20045578", "20045577", "20053063", "20053064", "20048858", "20048859", "20041790",
+    "STC-001", "STC-002", "STC-003", "STC-004"
+  ],
+  "mergeIds": { "STC-008": "20038367", "STC-009": "20046328" }
+}

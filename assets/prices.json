@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "currency": "VND",
+  "source": "Giá do người dùng chốt trong cuộc hội thoại; không phải bảng giá niêm yết toàn hãng. Mã STC-xxx là mã nội bộ mẫu, không phải SKU hãng. V2: bỏ AOK; rèm kéo ngang theo báo giá FPT; gộp STC-008→20038367, STC-009→20046328.",
+  "products": [
+    {
+      "id": "FPT-REM-KN-BO",
+      "name": "Động cơ và phụ kiện rèm cửa kéo ngang (220V, 1,5N.m, 80W, IP41)",
+      "unit": "Bộ",
+      "unitPrice": 3774000
+    },
+    {
+      "id": "FPT-RAY-KN-M",
+      "name": "Thanh ray rèm kéo ngang (nhôm sơn tĩnh điện, mở 1 hoặc 2 bên)",
+      "unit": "mét",
+      "unitPrice": 550000
+    },
+    {
+      "id": "STC-005",
+      "name": "Công tắc vuông thông minh FPT",
+      "unit": "cái",
+      "unitPrice": 2079000
+    },
+    {
+      "id": "STC-006",
+      "name": "Công tắc rèm vuông",
+      "unit": "cái",
+      "unitPrice": 1639000
+    },
+    {
+      "id": "STC-007",
+      "name": "Ổ cắm thông minh BLE",
+      "unit": "cái",
+      "unitPrice": 385000
+    },
+    {
+      "id": "20038367",
+      "name": "Bộ điều khiển trung tâm FPT Play Box S - T590",
+      "unit": "Bộ",
+      "unitPrice": 2409000
+    },
+    {
+      "id": "20046328",
+      "name": "Thiết bị mở rộng sóng ZigBee 3.0",
+      "unit": "Chiếc",
+      "unitPrice": 429000
+    }
+  ]
+}

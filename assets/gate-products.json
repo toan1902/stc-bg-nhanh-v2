@@ -1,0 +1,126 @@
+{
+  "version": "gate-v2",
+  "source": "Catalogue AB GATE (AB Auto) và catalogue DEA (Made in Italy). Giá bán do Giám đốc STC chốt ngày 05/10/2026. Mã CONG-xxx là mã nội bộ, không phải SKU hãng.",
+  "products": [
+    { "id": "CONG-AB-AMSAN", "name": "Bộ động cơ cổng âm sàn AB GATE (2 cánh) – Hàng Việt Nam", "unit": "Bộ", "unitPrice": 30000000 },
+    { "id": "CONG-DEA-GHOST100-24V", "name": "Bộ động cơ cổng âm sàn DEA Ghost 100 – 24V (2 cánh) – Italy", "unit": "Bộ", "unitPrice": 34000000 },
+    { "id": "CONG-DEA-LIVI900-24V", "name": "Bộ động cơ cổng lùa DEA Livi 900kg – 24V – Italy", "unit": "Bộ", "unitPrice": 24000000 },
+    { "id": "CONG-AB-ACQUY", "name": "Bộ ắc quy lưu điện cho động cơ cổng AB GATE", "unit": "Bộ", "unitPrice": 1990000 }
+  ],
+  "specRows": [
+    ["origin", "Xuất xứ"],
+    ["supply", "Nguồn điện cấp"],
+    ["motorVolt", "Điện áp mô tơ"],
+    ["power", "Công suất"],
+    ["load", "Tải trọng tối đa"],
+    ["length", "Chiều dài cánh tối đa"],
+    ["speed", "Tốc độ đóng/mở"],
+    ["angle", "Góc mở tối đa"],
+    ["ip", "Cấp bảo vệ động cơ"],
+    ["temp", "Nhiệt độ hoạt động"],
+    ["weight", "Trọng lượng motor"],
+    ["outage", "Khi mất điện"],
+    ["app", "Điều khiển qua điện thoại"]
+  ],
+  "specs": {
+    "CONG-AB-AMSAN": {
+      "short": "AB GATE âm sàn",
+      "kind": "amsan",
+      "origin": "Việt Nam", "supply": "230V", "motorVolt": "24V", "power": "—",
+      "load": "800 kg / cánh", "length": "1,5 m (ở tải 800 kg)", "speed": "19 giây / 90°", "angle": "102°",
+      "ip": "IP67 + gioăng chống rác, cản nước", "temp": "—", "weight": "—",
+      "outage": "Mở bằng khóa cơ", "app": "App AB Smart (cần module mở rộng)",
+      "components": [
+        "01 tủ điều khiển AB Control Units (IP54)",
+        "02 động cơ AB Gate",
+        "02 hộp đế inox 201 (343×416×183 mm) + cơ cấu quay 102°",
+        "02 điều khiển từ xa",
+        "01 bộ cảm biến an toàn",
+        "Bộ khóa chìa mở khi mất điện"
+      ]
+    },
+    "CONG-DEA-GHOST100-24V": {
+      "short": "DEA Ghost 100 – 24V",
+      "kind": "amsan",
+      "origin": "Italy", "supply": "220V", "motorVolt": "24V", "power": "50W / động cơ",
+      "load": "600 kg / cánh", "length": "3,5 m / cánh", "speed": "14 giây", "angle": "—",
+      "ip": "IP67", "temp": "-20 ÷ 50°C", "weight": "11 kg / cái",
+      "outage": "Mở bằng khóa chìa", "app": "Bộ XSmarter (tùy chọn)",
+      "components": [
+        "01 tủ điều khiển",
+        "02 mô tơ (IP67) + bi trợ lực",
+        "02 hộp đế + ngàm xoay",
+        "02 bản lề, 02 tay khuỷu",
+        "02 khóa chìa mở khi mất điện",
+        "01 bộ cảm biến an toàn",
+        "02 chìa điều khiển từ xa + bao da"
+      ]
+    },
+    "CONG-DEA-LIVI900-24V": {
+      "short": "DEA Livi 900kg – 24V",
+      "kind": "lua",
+      "origin": "Italy", "supply": "220V", "motorVolt": "24V", "power": "110W",
+      "load": "900 kg", "length": "—", "speed": "10 m / phút", "angle": "—",
+      "ip": "IPX44", "temp": "-20 ÷ 50°C", "weight": "12 kg",
+      "outage": "Mở bằng khóa trên thân động cơ", "app": "Bộ XSmarter (tùy chọn)",
+      "components": [
+        "01 động cơ",
+        "01 bản mã chân đế + bu lông",
+        "Bộ giới hạn hành trình",
+        "01 bộ cảm biến an toàn",
+        "02 chìa điều khiển từ xa + bao da",
+        "Không gồm thanh răng: tính theo số mét chiều dài cánh"
+      ]
+    }
+  },
+  "requirements": {
+    "amsan": {
+      "title": "Cổng mở cánh: Âm sàn",
+      "items": [
+        "Cánh cổng chắc chắn, không xệ, không cong vênh, đẩy tay đi nhẹ.",
+        "Kích thước và trọng lượng mỗi cánh nằm trong giới hạn của model.",
+        "Trụ cổng vững. Bản lề dưới được thay bằng trục của động cơ, bản lề trên giữ lại và phải thẳng tâm với hộp đế.",
+        "Đào hố đặt hộp đế dưới chân mỗi cánh, đổ bê tông cố định. Mặt hộp đế bằng mặt sân hoàn thiện.",
+        "Có đường thoát nước từ đáy hố hộp đế ra rãnh hoặc hố ga.",
+        "Chôn ống luồn dây từ mỗi hộp đế về tủ điều khiển, và ống cho cặp cảm biến hai bên trụ."
+      ]
+    },
+    "lua": {
+      "title": "Cổng trượt: Lùa",
+      "items": [
+        "Ray dưới thẳng, phẳng, bắt chắc. Bánh xe trơn, cánh đẩy tay đi nhẹ, không kẹt.",
+        "Có thanh dẫn hướng phía trên, giữ cánh không đổ.",
+        "Đổ bệ bê tông đặt động cơ bên trong cổng, ở phía cánh lùa vào. Bệ cao hơn mặt sân, chống ngập nước.",
+        "Gắn thanh răng dọc toàn bộ chiều dài cánh, ăn khớp với bánh răng động cơ.",
+        "Có chặn cơ khí ở hai đầu hành trình.",
+        "Chôn ống luồn dây cho cặp cảm biến hai bên trụ."
+      ]
+    },
+    "dien": {
+      "title": "Yêu cầu chung về điện",
+      "items": [
+        "Nguồn 220V riêng từ tủ điện nhà, có aptomat và chống giật riêng, kéo tới vị trí tủ điều khiển hoặc động cơ.",
+        "Tủ điều khiển đặt nơi khô ráo, có mái che, cao hơn mặt sân.",
+        "Nếu muốn điều khiển qua điện thoại: cổng cần có sóng Wi-Fi ổn định."
+      ]
+    }
+  },
+  "flow": [
+    ["Khảo sát", "đo kích thước cánh, ước trọng lượng, kiểm tra hiện trạng cổng, trụ, ray và nguồn điện. Chốt model phù hợp."],
+    ["Chốt đơn", "xác nhận phương án, hạng mục tùy chọn và lịch thi công."],
+    ["Chuẩn bị mặt bằng", "đào hố, đổ bệ, chôn ống, kéo nguồn và thoát nước theo yêu cầu kỹ thuật."],
+    ["Lắp đặt", "lắp động cơ, tủ điều khiển, cảm biến. Cân chỉnh hành trình, lực và tốc độ."],
+    ["Chạy thử và bàn giao", "kiểm tra cảm biến an toàn, hướng dẫn mở cổng khi mất điện, cài remote hoặc app. Ký biên bản bàn giao."]
+  ],
+  "sample": {
+    "items": [
+      { "productId": "CONG-AB-AMSAN", "listPrice": 30000000, "unitPrice": 28000000, "quantity": 1 },
+      { "productId": "CONG-DEA-GHOST100-24V", "listPrice": 34000000, "unitPrice": 32000000, "quantity": 1 },
+      { "productId": "CONG-DEA-LIVI900-24V", "listPrice": 24000000, "unitPrice": 22000000, "quantity": 1 }
+    ],
+    "promo": "DEAL SỐC THÁNG 10/2026: giảm trực tiếp 2.000.000đ cho cả 03 phương án khi đặt cọc trong tháng 10/2026.\nRiêng AB GATE tặng thêm bộ ắc quy lưu điện trị giá 1.990.000đ. Người Việt ưu tiên dùng hàng Việt.\nHạn chót đặt cọc: hết ngày 31/10/2026.",
+    "validity": "Đến hết ngày 31/10/2026",
+    "warranty": "Bảo hành 2 năm",
+    "note": "Thời gian thi công dự kiến 2-3 ngày sau khi chốt đơn và mặt bằng đã sẵn sàng. Đặt cọc 20%, khi đưa thiết bị tới công trình xác nhận và thanh toán 60%, 20% còn lại sau khi hoàn tất bàn giao."
+  }
+}

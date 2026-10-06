@@ -1,0 +1,1463 @@
+{
+  "rows": [
+    {
+      "id": "20038367",
+      "name": "Bộ điều khiển trung tâm FPT Play Box S - T590",
+      "unit": "Bộ",
+      "quantity": 18,
+      "min": 0
+    },
+    {
+      "id": "20056543",
+      "name": "Công tắc cảm ứng vuông đen 4 nút Leto WiFi – Bluetooth Mesh",
+      "unit": "Chiếc",
+      "quantity": 5,
+      "min": 0
+    },
+    {
+      "id": "20056542",
+      "name": "Công tắc cảm ứng vuông đen 3 nút Leto WiFi – Bluetooth Mesh",
+      "unit": "Chiếc",
+      "quantity": 3,
+      "min": 0
+    },
+    {
+      "id": "20056541",
+      "name": "Công tắc cảm ứng vuông đen 2 nút Leto WiFi – Bluetooth Mesh",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20056539",
+      "name": "Công tắc cảm ứng vuông trắng 4 nút Leto WiFi – Bluetooth Mesh",
+      "unit": "Chiếc",
+      "quantity": 5,
+      "min": 0
+    },
+    {
+      "id": "20056538",
+      "name": "Công tắc cảm ứng vuông trắng 3 nút Leto WiFi – Bluetooth Mesh",
+      "unit": "Chiếc",
+      "quantity": 5,
+      "min": 0
+    },
+    {
+      "id": "20056537",
+      "name": "Công tắc cảm ứng vuông trắng 2 nút Leto WiFi – Bluetooth Mesh",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20056535",
+      "name": "Công tắc cảm ứng chữ nhật đen 4 nút Leto WiFi – Bluetooth Mesh",
+      "unit": "Chiếc",
+      "quantity": 18,
+      "min": 0
+    },
+    {
+      "id": "20056534",
+      "name": "Công tắc cảm ứng chữ nhật đen 3 nút Leto WiFi – Bluetooth Mesh",
+      "unit": "Chiếc",
+      "quantity": 5,
+      "min": 0
+    },
+    {
+      "id": "20056533",
+      "name": "Công tắc cảm ứng chữ nhật đen 2 nút Leto WiFi – Bluetooth Mesh",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20056530",
+      "name": "Công tắc cảm ứng chữ nhật trắng 2 nút Leto WiFi – Bluetooth Mesh",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20056536",
+      "name": "Công tắc cảm ứng vuông trắng CSC 1 nút Leto WiFi – Bluetooth Mesh",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20056540",
+      "name": "Công tắc cảm ứng vuông đen CSC 1 nút Leto WiFi – Bluetooth Mesh",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20056532",
+      "name": "Công tắc cảm ứng chữ nhật đen CSC 1 nút Leto WiFi – Bluetooth Mesh",
+      "unit": "Chiếc",
+      "quantity": 2,
+      "min": 0
+    },
+    {
+      "id": "20054233",
+      "name": "Công tắc cửa cuốn chữ nhật màu trắng Leto WiFi-BLE",
+      "unit": "Chiếc",
+      "quantity": 14,
+      "min": 0
+    },
+    {
+      "id": "20054232",
+      "name": "Công tắc cửa cuốn vuông màu trắng Leto WiFi-BLE",
+      "unit": "Chiếc",
+      "quantity": 1,
+      "min": 0
+    },
+    {
+      "id": "20049829",
+      "name": "Ổ cắm thông minh SA Athena",
+      "unit": "Chiếc",
+      "quantity": 1,
+      "min": 0
+    },
+    {
+      "id": "20049842",
+      "name": "FPT Camera IQ 3 (FCAM-I03L)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20049843",
+      "name": "FPT Camera Play (FCAM-P01L)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044645",
+      "name": "FPT Camera IQ 2S (FCAM-I02S)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20055001",
+      "name": "FPT Camera IQ 3S (FCAM-IQ 3S)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20055000",
+      "name": "FPT Camera Play 3 (FCAM-Play 3)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20056727",
+      "name": "FPT Camera SE 2S (FCAM-SE 2S)",
+      "unit": "Chiếc",
+      "quantity": 1,
+      "min": 0
+    },
+    {
+      "id": "20056726",
+      "name": "FPT Camera SE 2 (FCAM-SE 2)",
+      "unit": "Chiếc",
+      "quantity": 1,
+      "min": 0
+    },
+    {
+      "id": "20051495",
+      "name": "Còi hú báo động",
+      "unit": "Chiếc",
+      "quantity": 15,
+      "min": 0
+    },
+    {
+      "id": "20041437",
+      "name": "Cảm biến cửa AQA",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20051683",
+      "name": "Cảm biến khói Athena",
+      "unit": "Chiếc",
+      "quantity": 6,
+      "min": 0
+    },
+    {
+      "id": "20054231",
+      "name": "Cảm biến hiện diện âm trần Athena AC",
+      "unit": "Chiếc",
+      "quantity": 19,
+      "min": 0
+    },
+    {
+      "id": "20041056",
+      "name": "Cảm biến chuyển động Athena - V1",
+      "unit": "Chiếc",
+      "quantity": 3,
+      "min": 0
+    },
+    {
+      "id": "20044125",
+      "name": "Cảm biến chuyển động Athena - V2",
+      "unit": "Chiếc",
+      "quantity": 7,
+      "min": 0
+    },
+    {
+      "id": "20048222",
+      "name": "Cảm biến chuyển động âm trần AC Athena",
+      "unit": "Chiếc",
+      "quantity": 3,
+      "min": 0
+    },
+    {
+      "id": "20041436",
+      "name": "Cảm biến chuyển động AQA",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20047482",
+      "name": "Bộ điều khiển thiết bị IR mở rộng (chuẩn Wi-Fi và Bluetooth)",
+      "unit": "Chiếc",
+      "quantity": 14,
+      "min": 0
+    },
+    {
+      "id": "20044111",
+      "name": "Công tắc cảm ứng 1 nút chữ nhật trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 2,
+      "min": 0
+    },
+    {
+      "id": "20044113",
+      "name": "Công tắc cảm ứng 2 nút chữ nhật trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 1,
+      "min": 0
+    },
+    {
+      "id": "20044115",
+      "name": "Công tắc cảm ứng 3 nút chữ nhật trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 9,
+      "min": 0
+    },
+    {
+      "id": "20044117",
+      "name": "Công tắc cảm ứng 4 nút chữ nhật trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 14,
+      "min": 0
+    },
+    {
+      "id": "20044112",
+      "name": "Công tắc cảm ứng 1 nút chữ nhật đen Athena",
+      "unit": "Chiếc",
+      "quantity": 4,
+      "min": 0
+    },
+    {
+      "id": "20044114",
+      "name": "Công tắc cảm ứng 2 nút chữ nhật đen Athena",
+      "unit": "Chiếc",
+      "quantity": 10,
+      "min": 0
+    },
+    {
+      "id": "20044116",
+      "name": "Công tắc cảm ứng 3 nút chữ nhật đen Athena",
+      "unit": "Chiếc",
+      "quantity": 17,
+      "min": 0
+    },
+    {
+      "id": "20044118",
+      "name": "Công tắc cảm ứng 4 nút chữ nhật đen Athena",
+      "unit": "Chiếc",
+      "quantity": 12,
+      "min": 0
+    },
+    {
+      "id": "20044135",
+      "name": "Công tắc cảm ứng 1 nút vuông trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044137",
+      "name": "Công tắc cảm ứng 2 nút vuông trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 2,
+      "min": 0
+    },
+    {
+      "id": "20044139",
+      "name": "Công tắc cảm ứng 3 nút vuông trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 1,
+      "min": 0
+    },
+    {
+      "id": "20044141",
+      "name": "Công tắc cảm ứng 4 nút vuông trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20057086",
+      "name": "Công tắc cảm ứng vuông 4 nút Athena (Bluetooth), màu Champagne",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20057085",
+      "name": "Công tắc cảm ứng vuông 3 nút Athena (Bluetooth), màu Champagne",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20057084",
+      "name": "Công tắc cảm ứng vuông 2 nút Athena (Bluetooth), màu Champagne",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044134",
+      "name": "Công tắc cảm ứng 1 nút vuông đen Athena",
+      "unit": "Chiếc",
+      "quantity": 2,
+      "min": 0
+    },
+    {
+      "id": "20044136",
+      "name": "Công tắc cảm ứng 2 nút vuông đen Athena",
+      "unit": "Chiếc",
+      "quantity": 6,
+      "min": 0
+    },
+    {
+      "id": "20044138",
+      "name": "Công tắc cảm ứng 3 nút vuông đen Athena",
+      "unit": "Chiếc",
+      "quantity": 13,
+      "min": 0
+    },
+    {
+      "id": "20044140",
+      "name": "Công tắc cảm ứng 4 nút vuông đen Athena",
+      "unit": "Chiếc",
+      "quantity": 9,
+      "min": 0
+    },
+    {
+      "id": "20044104",
+      "name": "Công tắc cảm ứng 1 nút chữ nhật công suất cao đen Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044103",
+      "name": "Công tắc cảm ứng 1 nút chữ nhật công suất cao trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 4,
+      "min": 0
+    },
+    {
+      "id": "20057089",
+      "name": "Công tắc cảm ứng vuông 1 nút CSC Athena (Bluetooth), màu Champagne",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044552",
+      "name": "Công tắc cảm ứng vuông công suất cao 1 nút trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044553",
+      "name": "Công tắc cảm ứng vuông công suất cao 1 nút đen Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20051684",
+      "name": "Công tắc cửa cuốn chữ nhật màu đen Athena",
+      "unit": "Chiếc",
+      "quantity": 6,
+      "min": 0
+    },
+    {
+      "id": "20051685",
+      "name": "Công tắc cửa cuốn chữ nhật màu trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 6,
+      "min": 0
+    },
+    {
+      "id": "20051686",
+      "name": "Công tắc cửa cuốn vuông màu đen Athena",
+      "unit": "Chiếc",
+      "quantity": 1,
+      "min": 0
+    },
+    {
+      "id": "20051687",
+      "name": "Công tắc cửa cuốn vuông màu trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 1,
+      "min": 0
+    },
+    {
+      "id": "20057087",
+      "name": "Công tắc cửa cuốn vuông Athena (Bluetooth), màu Champagne",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044207",
+      "name": "Công tắc rèm chữ nhật trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 4,
+      "min": 0
+    },
+    {
+      "id": "20044126",
+      "name": "Công tắc rèm chữ nhật đen Athena",
+      "unit": "Chiếc",
+      "quantity": 2,
+      "min": 0
+    },
+    {
+      "id": "20044554",
+      "name": "Công tắc rèm vuông đen Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044555",
+      "name": "Công tắc rèm vuông trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044121",
+      "name": "Ổ cắm đơn thông minh 16A Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044123",
+      "name": "Công tắc bấm ngữ cảnh vuông 6 nút Athena",
+      "unit": "Chiếc",
+      "quantity": 1,
+      "min": 0
+    },
+    {
+      "id": "20044142",
+      "name": "Ổ cắm mặt kính âm tường chữ nhật đen Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044143",
+      "name": "Ổ cắm mặt kính âm tường chữ nhật trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 1,
+      "min": 0
+    },
+    {
+      "id": "20044144",
+      "name": "Ổ cắm mặt kính âm tường vuông đen Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044145",
+      "name": "Ổ cắm mặt kính âm tường vuông trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20054603",
+      "name": "Ổ cắm thường âm tường chữ nhật nhân nổi màu trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20054604",
+      "name": "Ổ cắm thường âm tường chữ nhật nhân nổi màu đen Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20054605",
+      "name": "Ổ cắm thường âm tường vuông nhân nổi màu trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20054606",
+      "name": "Ổ cắm thường âm tường vuông nhân nổi màu đen Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20056549",
+      "name": "Ổ cắm âm tường vuông mặt kính nhân nổi màu Champagne Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041010",
+      "name": "Công tắc cảm ứng 2 nút chữ nhật trắng - Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041012",
+      "name": "Công tắc cảm ứng 3 nút chữ nhật trắng - Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041014",
+      "name": "Công tắc cảm ứng 4 nút chữ nhật trắng - Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041011",
+      "name": "Công tắc cảm ứng 2 nút chữ nhật đen - Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041013",
+      "name": "Công tắc cảm ứng 3 nút chữ nhật đen - Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041015",
+      "name": "Công tắc cảm ứng 4 nút chữ nhật đen - Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045943",
+      "name": "Công tắc cảm ứng 2 nút chữ nhật stone gray Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045942",
+      "name": "Công tắc cảm ứng 2 nút chữ nhật champagne Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045947",
+      "name": "Công tắc chữ nhật cảm ứng 4 nút champagne Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045949",
+      "name": "Công tắc chữ nhật cảm ứng 4 nút stone gray",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048064",
+      "name": "Công tắc cảm ứng 4 nút chữ nhật Rose Gold Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041018",
+      "name": "Công tắc cảm ứng 2 nút vuông trắng Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041020",
+      "name": "Công tắc cảm ứng 3 nút vuông trắng Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041022",
+      "name": "Công tắc cảm ứng 4 nút vuông trắng Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041019",
+      "name": "Công tắc cảm ứng 2 nút vuông đen Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041021",
+      "name": "Công tắc cảm ứng 3 nút vuông đen Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041023",
+      "name": "Công tắc cảm ứng 4 nút vuông đen Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20051784",
+      "name": "Công tắc cảm ứng vuông Hera (Kiểu màu đen, 4 nút, vuông, 4 kênh điều khiển ON/OFF, 4 kênh điều khiển kịch bản)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044106",
+      "name": "Công tắc cảm ứng 2 nút vuông rose gold Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044107",
+      "name": "Công tắc cảm ứng 2 nút vuông stone gray Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044105",
+      "name": "Công tắc cảm ứng 2 nút vuông champagne Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044133",
+      "name": "Công tắc cảm ứng 3 nút vuông stone gray Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044131",
+      "name": "Công tắc cảm ứng 3 nút vuông champagne Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044109",
+      "name": "Công tắc vuông cảm ứng 3 nút + 1 nút ngữ cảnh Rose gold Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044110",
+      "name": "Công tắc vuông cảm ứng 3 nút + 1 nút ngữ cảnh stone gray Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044108",
+      "name": "Công tắc vuông cảm ứng 3 nút + 1 nút ngữ cảnh champagne Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20051783",
+      "name": "Công tắc cảm ứng công suất cao vuông Hera (Kiểu màu rose gold, 1 nút, vuông, 1 kênh CSC)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20051787",
+      "name": "Công tắc cảm ứng công suất cao vuông Hera (Kiểu màu champagne, 1 nút, vuông, 1 kênh CSC)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20052246",
+      "name": "Công tắc cảm ứng công suất cao chữ nhật Hera (Kiểu màu đen, viền rose gold, 1 nút, chữ nhật,1 kênh công suất cao)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044129",
+      "name": "Công tắc cảm ứng 2 nút vuông công suất cao đen Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044128",
+      "name": "Công tắc cảm ứng 2 nút vuông công suất cao trắng Hera",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20051139",
+      "name": "Công tắc rèm cảm ứng Hera( Kính màu dark gray, viền dark gray, 3 nút điều khiển đóng mở dừng, chữ nhật, ZigBee)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041446",
+      "name": "Công tắc mini không dây AQA",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20046328",
+      "name": "Thiết bị mở rộng sóng ZigBee 3.0",
+      "unit": "Chiếc",
+      "quantity": 5,
+      "min": 0
+    },
+    {
+      "id": "20041041",
+      "name": "Đèn Downlight CCT Athena 90/7W - V1",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041042",
+      "name": "Đèn Downlight CCT Athena 110/9W - V1",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044146",
+      "name": "Đèn Downlight CCT Athena 90/7W - V2",
+      "unit": "Chiếc",
+      "quantity": 9,
+      "min": 0
+    },
+    {
+      "id": "20043360",
+      "name": "Đèn Downlight CCT Athena 110/9W - V2",
+      "unit": "Chiếc",
+      "quantity": 2,
+      "min": 0
+    },
+    {
+      "id": "20044119",
+      "name": "Đèn Downlight RGB Athena 110/9W",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041055",
+      "name": "Đèn Bulb Athena 9W",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041060",
+      "name": "Đèn LED dây thông minh 5m Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045878",
+      "name": "Pack Đèn LED dây thông minh đổi màu 100m Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044147",
+      "name": "Nguồn đèn LED dây thông minh Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041045",
+      "name": "Đèn LED Pannel tròn Athena 135/9W",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041047",
+      "name": "Đèn LED Panel chữ nhật Athena 30x120/40W",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20052548",
+      "name": "Đèn LED âm trần Spotlight góc 24 Athena 76/12W BLE",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20052549",
+      "name": "Đèn LED âm trần Spotlight góc 50 Athena 95/12W BLE",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20052550",
+      "name": "Đèn LED âm trần Spotlight góc 24 Athena 86/12W BLE",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20056887",
+      "name": "Động cơ rèm cuốn IH35 6/28E",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048170",
+      "name": "Vải rèm cuốn",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20053062",
+      "name": "Vải rèm cầu vồng",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045892",
+      "name": "Phụ kiện rèm cuốn (trơn, lưới, cầu vồng)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045893",
+      "name": "Phụ kiện rèm cuốn (roman, gỗ)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045894",
+      "name": "Ống nhôm rèm cuốn phi 50",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045895",
+      "name": "Ống nhôm rèm cuốn phi 55",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045896",
+      "name": "Ống nhôm rèm cuốn phi 70",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045899",
+      "name": "Máng nhôm rèm cuốn",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041031",
+      "name": "Bộ điều khiển rèm Hera",
+      "unit": "Chiếc",
+      "quantity": 1,
+      "min": 0
+    },
+    {
+      "id": "20041058",
+      "name": "Động cơ rèm AOK",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20053474",
+      "name": "Động cơ điện dùng cho rèm kéo 2.5Nm",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045578",
+      "name": "Thanh ray bi tự do AOK",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045577",
+      "name": "Thanh ray bi định hình AOK",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20053063",
+      "name": "Thanh ray rèm thẳng tiêu chuẩn bi tự do AOK",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20053064",
+      "name": "Thanh ray rèm thẳng tiêu chuẩn bi định hình AOK",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048858",
+      "name": "Thanh ray bi tự do - uốn cong AOK",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048859",
+      "name": "Thanh ray bi định hình - uốn cong AOK",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20041790",
+      "name": "Bộ phụ kiện rèm vải AOK",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048211",
+      "name": "Động cơ rèm kéo ngang (mã PS2000A)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048212",
+      "name": "Bộ phụ kiện động cơ rèm kéo ngang (mã PS2000A)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048213",
+      "name": "Thanh ray kèm phụ kiện bi tự do (PS2000A)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048214",
+      "name": "Thanh ray kèm phụ kiện bi định hình (PS2000A)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048860",
+      "name": "Thanh ray bi tự do - uốn cong PS2000A",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048861",
+      "name": "Thanh ray bi định hình - uốn cong PS2000A",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20052454",
+      "name": "Khóa điện vân tay loại Push & Pull YMI70A RG loại Push & Pull (4 chức năng)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045553",
+      "name": "Khóa điện vân tay loại Push & Pull YMI70A MB (4 chức năng)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045555",
+      "name": "Khóa điện tử vân tay YDM7116A CG (4 chức năng)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045557",
+      "name": "Khóa điện tử vân tay YDM4109A GOLD (3 chức năng mở cửa)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20045558",
+      "name": "Khóa điện tử YDM3109A SIL (3 chức năng mở cửa)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20044434",
+      "name": "Công tắc chuyển mạch Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048249",
+      "name": "Mặt kính công tắc vuông 1 nút đen Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048250",
+      "name": "Mặt kính công tắc vuông 1 nút trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048251",
+      "name": "Mặt kính công tắc vuông 2 nút đen Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048252",
+      "name": "Mặt kính công tắc vuông 2 nút trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048253",
+      "name": "Mặt kính công tắc vuông 3 nút đen Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048254",
+      "name": "Mặt kính công tắc vuông 3 nút trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048255",
+      "name": "Mặt kính công tắc vuông 4 nút đen Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048256",
+      "name": "Mặt kính công tắc vuông 4 nút trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048259",
+      "name": "Mặt kính công tắc chữ nhật 1 nút Athena màu trắng",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048260",
+      "name": "Mặt kính công tắc chữ nhật 1 nút Athena màu đen",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048261",
+      "name": "Mặt kính Công tắc chữ nhật 2 nút Athena màu trắng",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048262",
+      "name": "Mặt kính công tắc chữ nhật 2 nút Athena màu đen",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048263",
+      "name": "Mặt kính công tắc chữ nhật 3 nút Athena màu trắng",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048264",
+      "name": "Mặt kính công tắc chữ nhật 3 nút Athena màu đen",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048265",
+      "name": "Mặt kính công tắc chữ nhật 4 nút Athena màu trắng",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048266",
+      "name": "Mặt kính công tắc chữ nhật 4 nút Athena màu đen",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048275",
+      "name": "Mặt kính công tắc rèm chữ nhật màu đen Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048276",
+      "name": "Mặt kính công tắc rèm chữ nhật màu trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048277",
+      "name": "Mặt kính Công tắc rèm vuông màu đen Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048278",
+      "name": "Mặt kính công tắc rèm vuông màu trắng Athena",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048224",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính màu đen, Viền Rose Gold, 2 nút, chữ nhật)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048226",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính màu đen, Viền Rose Gold, 3 nút, chữ nhật)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048228",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính màu đen, Viền Rose Gold, 4 nút, chữ nhật)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048232",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính màu đen, Viền Rose Gold, 2 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048234",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính màu đen, Viền Rose Gold, 3 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048236",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính màu đen, Viền Rose Gold, 4 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048223",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính màu trắng, Viền Champagne, 2 nút, chữ nhật)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048225",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính màu trắng, Viền Champagne, 3 nút, chữ nhật)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048227",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính màu trắng, Viền Champagne, 4 nút, chữ nhật)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048231",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính màu trắng, Viền Champagne, 2 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048233",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính màu trắng, Viền Champagne, 3 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048235",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính màu trắng, Viền Champagne, 4 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048237",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Champagne, Viền Champagne, 2 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048243",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Champagne, Viền Champagne 3 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048240",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Champagne, Viền Champagne,4 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048279",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Champagne, Viền Champagne, 2 nút, chữ nhật)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048281",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Champagne, Viền Champagne, 3 nút, chữ nhật)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048283",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Champagne, Viền Champagne, 4 nút, chữ nhật)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048238",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Rose Gold, Viền Rose Gold, 2 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048244",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Rose Gold, Viền Rose Gold, 3 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048241",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Rose Gold, Viền Rose Gold,4 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048239",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Stone gray, Viền Stone gray, 2 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048245",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Stone gray, Viền Stone gray, 3 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048242",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Stone gray, Viền Stone gray, 4 nút, vuông)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048280",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Stone gray, Viền Stone gray, 2 nút, chữ nhật)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048282",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Stone gray, Viền Stone gray, 3 nút, chữ nhật)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    },
+    {
+      "id": "20048284",
+      "name": "Mặt kính công tắc cảm ứng Hera (Kính Stone gray, Viền Stone gray, 4 nút, chữ nhật)",
+      "unit": "Chiếc",
+      "quantity": 0,
+      "min": 0
+    }
+  ],
+  "issues": [
+    {
+      "id": "20052480",
+      "row": 9,
+      "reason": "Mã trùng"
+    },
+    {
+      "id": "20056531",
+      "row": 19,
+      "reason": "Tồn âm hoặc thiếu"
+    },
+    {
+      "id": "20054234",
+      "row": 26,
+      "reason": "Mã trùng"
+    },
+    {
+      "id": "20044124",
+      "row": 37,
+      "reason": "Mã trùng"
+    },
+    {
+      "id": "20054234",
+      "row": 39,
+      "reason": "Mã trùng"
+    },
+    {
+      "id": "20052480",
+      "row": 45,
+      "reason": "Mã trùng"
+    },
+    {
+      "id": "20044124",
+      "row": 46,
+      "reason": "Mã trùng"
+    }
+  ],
+  "period": "01/09/2026–30/09/2026"
+}
