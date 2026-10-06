@@ -74,3 +74,30 @@ body.cloud-on .stock-quote{display:none}
 .cloud-badge.s-1{background:#e6f0fb;color:#0a4f99}.cloud-badge.s-2{background:#fff0e3;color:#c9480a}.cloud-badge.s-3{background:#e7f7ee;color:#0a7a3b}.cloud-badge.s-4{background:#fde8e8;color:#b42318}
 button.danger{border-color:#f3b4b4;color:#b42318}
 #cloudInfo{white-space:pre-wrap}
+
+/* V2: đăng nhập PIN & dữ liệu chỉ tải sau đăng nhập */
+#loginGate{display:none}
+body.need-login{overflow:hidden}
+body.need-login #loginGate{display:flex;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at 20% 110%,#0066b3 0,#061b49 55%)}
+body.need-login > header,body.need-login > main{visibility:hidden}
+.login-card{width:100%;max-width:360px;background:#fff;border-radius:18px;padding:28px 24px;text-align:center;box-shadow:0 20px 50px -10px rgba(0,0,0,.5);border-top:6px solid #f87919}
+.login-card img{height:64px;border-radius:10px;background:#061b49;padding:6px}
+.login-card h1{font-size:20px;margin:12px 0 4px;color:#061b49}
+.login-card p{margin:0 0 14px;color:#5b6478;font-size:14px}
+.login-card input{width:100%;text-align:center;font-size:24px;letter-spacing:.5em;padding:12px;border:2px solid #dce3ed;border-radius:12px;margin-bottom:12px}
+.login-card input:focus{border-color:#0066b3;outline:none}
+.login-card button{width:100%;padding:12px;font-size:16px}
+#loginMsg{color:#b42318;min-height:1.2em;margin:10px 0 6px}
+.login-card small{color:#8b93a6;font-size:12px}
+.user-chip{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.user-chip button{padding:4px 10px;font-size:12px}
+.catalog-cloud-note{background:#edf4fd;border:1px solid #d4e3f7;border-radius:10px;padding:10px 14px;margin:0 0 14px;font-size:13px}
+/* Giá & tồn quản lý trên Sheet: ẩn công cụ nhập/sửa giá và kho cục bộ cũ */
+body.cloud-on #catalog > section.card:first-of-type,
+body.cloud-on #catalog .import-toolbar .upload,
+body.cloud-on #resetCatalog,
+body.cloud-on .picker-onboarding .upload,
+body.cloud-on .picker-onboarding .upload + p,
+body.cloud-on nav .nav:not([data-view]),
+body.cloud-on .device-note{display:none}
+.user-chip{margin-left:auto}

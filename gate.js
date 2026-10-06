@@ -1,6 +1,6 @@
-import {normalizeProducts} from './core.js';
 let data=null;
-export async function loadGateData(){const r=await fetch('assets/gate-products.json',{cache:'no-store'});if(!r.ok)throw Error('Không tải được dữ liệu động cơ cổng.');const d=await r.json();d.products=normalizeProducts(d.products);data=d;return d;}
+// Dữ liệu động cơ cổng (thông số, mẫu, ưu đãi) nhận từ hệ thống chung sau khi đăng nhập
+export function setGateData(d){data=d||null;}
 export const gateData=()=>data;
 export const isGateId=id=>/^CONG-/.test(String(id||''));
 function gateModels(q){if(!data)return [];const ids=[...new Set(q.items.map(i=>i.productId).filter(id=>data.specs[id]))];return ids.map(id=>({id,...data.specs[id]}));}
@@ -18,4 +18,4 @@ export function gateAppendixHTML(q,esc,part='all'){const list=gateModels(q);if(!
  }
  return `<section class="gate-appendix">${h}</section>`;}
 // Mẫu 3 phương án; lấy tên/đơn vị theo danh mục hiện tại để khớp tên đã chỉnh
-export function gateSample(catalog){if(!data)throw Error('Chưa tải dữ liệu động cơ cổng.');const s=data.sample;return {items:s.items.map(x=>{const p=catalog.find(c=>c.id===x.productId)||data.products.find(c=>c.id===x.productId);return {productId:p.id,name:p.name,unit:p.unit,quantity:x.quantity,unitPrice:x.unitPrice,listPrice:x.listPrice};}),promo:s.promo,validity:s.validity,warranty:s.warranty,note:s.note};}
+export function gateSample(catalog){if(!data)throw Error('Chưa tải dữ liệu động cơ cổng.');const s=data.sample;return {items:s.items.map(x=>{const p=catalog.find(c=>c.id===x.productId);if(!p)throw Error('Danh mục chưa có mã '+x.productId+' (kiểm tra tab DanhMuc).');return {productId:p.id,name:p.name,unit:p.unit,quantity:x.quantity,unitPrice:x.unitPrice,listPrice:x.listPrice};}),promo:s.promo,validity:s.validity,warranty:s.warranty,note:s.note};}

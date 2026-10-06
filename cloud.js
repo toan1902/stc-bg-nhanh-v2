@@ -6,11 +6,14 @@ const STATUSES = ['Nháp', 'Đã gửi khách', 'Đặt cọc', 'Hoàn tất', '
 
 export function installCloud(api) {
   const $ = s => document.querySelector(s), e = api.esc;
-  let cfg = { url: DEFAULT_URL, pin: '', staff: '' }, rows = null, list = [], busy = false;
+  let cfg = { url: DEFAULT_URL, pin: '', staff: '', day: '' }, rows = null, list = [], alerts = [], busy = false;
   try { Object.assign(cfg, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (err) { /* dùng mặc định */ }
   if (!cfg.url) cfg.url = DEFAULT_URL;
   const saveCfg = () => { try { localStorage.setItem(KEY, JSON.stringify(cfg)); } catch (err) { api.tell('Không lưu được cấu hình kết nối trên trình duyệt này.'); } };
   const connected = () => !!(cfg.url && cfg.pin && cfg.staff);
+  // Đăng nhập theo ngày (giờ Việt Nam): sang ngày mới phải nhập lại PIN
+  const today = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });
+  if (cfg.pin && cfg.day !== today()) { cfg.pin = ''; cfg.staff = ''; saveCfg(); }
   const info = () => { const q = api.state(); return q.cloud && q.cloud.id === q.id ? q.cloud : null; };
   const locked = () => LOCKED.includes(info()?.status);
 
@@ -20,7 +23,7 @@ export function installCloud(api) {
     try { r = await fetch(cfg.url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action, pin: cfg.pin, ...payload }), signal: AbortSignal.timeout(45000) }); }
     catch (err) { throw Error('Không kết nối được hệ thống (mạng yếu hoặc link sai). Báo giá vẫn còn trên máy này.'); }
     let d; try { d = JSON.parse(await r.text()); } catch (err) { throw Error('Link không trả dữ liệu hệ thống. Kiểm tra link /exec và quyền truy cập "Bất kỳ ai".'); }
-    if (!d.ok) throw Error(d.error || 'Hệ thống báo lỗi.');
+    if (!d.ok) { if (/Mã PIN không đúng|quá nhiều lần/.test(d.error || '') && action !== 'ping') logout('Phiên đăng nhập không còn hiệu lực. Vui lòng nhập lại PIN.'); throw Error(d.error || 'Hệ thống báo lỗi.'); }
     return d;
   }
   async function run(btn, fn) {
@@ -47,21 +50,50 @@ export function installCloud(api) {
     api.changed(); api.saveLocal();
   }
 
-  /* ---------- UI: Công ty ---------- */
+  /* ---------- Đăng nhập bằng PIN ---------- */
+  const gate = document.createElement('div'); gate.id = 'loginGate';
+  gate.innerHTML = `<form class="login-card" autocomplete="off"><img src="assets/stc-logo.jpg" alt="STC CROP"><h1>APP BÁO GIÁ STC</h1><p>Nhập mã PIN nhân viên để vào</p>
+  <input id="loginPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="● ● ● ● ● ●" aria-label="Mã PIN 6 số" required>
+  <button id="loginBtn" class="primary" type="submit">Đăng nhập</button><p id="loginMsg" role="status"></p>
+  <small>Quên PIN hoặc nghi bị lộ: báo Giám đốc để đổi PIN.</small></form>`;
+  document.body.append(gate);
+  gate.querySelector('form').onsubmit = async ev => {
+    ev.preventDefault(); const pin = $('#loginPin').value.trim(), btn = $('#loginBtn');
+    if (!/^\d{6}$/.test(pin)) { $('#loginMsg').textContent = 'PIN gồm 6 chữ số.'; return; }
+    btn.disabled = true; btn.textContent = 'Đang kiểm tra…'; $('#loginMsg').textContent = '';
+    const prev = { ...cfg }; cfg.pin = pin;
+    try { const d = await call('ping'); cfg.staff = d.staff; cfg.day = today(); saveCfg(); }
+    catch (err) { cfg = prev; $('#loginMsg').textContent = err.message; return; }
+    finally { btn.disabled = false; btn.textContent = 'Đăng nhập'; }
+    $('#loginPin').value = ''; showGate(false);
+    try { await loadAll(); api.tell('Xin chào ' + cfg.staff); }
+    catch (err) { api.tell('Đã đăng nhập nhưng chưa tải được bảng giá: ' + err.message + ' — vào tab Công ty bấm "Tải lại bảng giá".'); }
+  };
+  function showGate(on) { document.body.classList.toggle('need-login', on); if (on) setTimeout(() => $('#loginPin')?.focus(), 50); render(); }
+  function logout(why) {
+    cfg = { url: cfg.url || DEFAULT_URL, pin: '', staff: '', day: '' }; saveCfg(); rows = null; list = []; alerts = [];
+    api.onLogout(); renderList(); renderAlerts(); showGate(true); if (why) $('#loginMsg').textContent = why;
+  }
+  async function loadAll() { const d = await call('catalog'); api.onCatalog(d); await loadStock(); await loadList(); await loadAlerts(); }
+  // Để app mở qua đêm: sang ngày mới tự đăng xuất
+  setInterval(() => { if (connected() && cfg.day !== today()) logout('Đã sang ngày mới, vui lòng nhập lại PIN.'); }, 60000);
+
+  const who = document.createElement('div'); who.className = 'user-chip';
+  who.innerHTML = '<span id="userName"></span><button id="logoutBtn" type="button">Đăng xuất</button>';
+  document.querySelector('.topbar').append(who);
+  $('#logoutBtn').onclick = () => logout();
+
   const set = document.createElement('section'); set.className = 'card cloud-settings';
-  set.innerHTML = `<h2>Kết nối hệ thống chung (Google Sheet)</h2><p class="muted">Báo giá, đặt cọc và tồn kho dùng chung cho cả công ty. Dán link Ứng dụng web Apps Script (kết thúc bằng /exec) và mã PIN của bạn. PIN chỉ lưu trên trình duyệt máy này.</p>
-  <div class="field-grid"><label class="wide">Link ứng dụng web<input id="cloudURL" type="url" placeholder="https://script.google.com/macros/s/…/exec"></label><label>Mã PIN nhân viên<input id="cloudPin" type="password" inputmode="numeric" autocomplete="off" maxlength="6"></label></div>
-  <div class="heading-actions"><button id="cloudConnect" class="primary">Kết nối</button><button id="cloudDisconnect">Ngắt kết nối trên máy này</button></div><p id="cloudConnMsg" role="status"></p>`;
+  set.innerHTML = `<h2>Tài khoản & hệ thống chung</h2><p id="cloudConnMsg" class="muted"></p>
+  <p class="muted">Bảng giá: tab <b>DanhMuc</b> · tồn kho: tab <b>Kho</b> · báo giá, đặt cọc, phiếu xuất, đề xuất nhập: Google Sheet <b>STC_BaoGia_Data</b>. Sửa giá trên Sheet rồi bấm <b>Tải lại bảng giá</b>.</p>
+  <div class="heading-actions"><button id="reloadCatalog">↻ Tải lại bảng giá & tồn kho</button><button id="logoutBtn2">Đăng xuất</button></div>`;
   $('#settings').append(set);
-  $('#cloudConnect').onclick = () => run($('#cloudConnect'), async () => {
-    const url = $('#cloudURL').value.trim(), pin = $('#cloudPin').value.trim();
-    if (!/^https:\/\/script\.google(usercontent)?\.com\//.test(url) && !/^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?\//.test(url)) throw Error('Link phải là link Ứng dụng web của Google Apps Script (https://script.google.com/macros/s/…/exec).');
-    if (!/^\d{6}$/.test(pin)) throw Error('PIN gồm 6 chữ số.');
-    const prev = { ...cfg }; cfg.url = url; cfg.pin = pin;
-    try { const d = await call('ping'); cfg.staff = d.staff; saveCfg(); } catch (err) { cfg = prev; throw err; }
-    $('#cloudConnMsg').textContent = '✓ Đã kết nối: ' + cfg.staff; await loadStock(); await loadList(); await loadAlerts(); api.tell('Đã kết nối hệ thống chung — ' + cfg.staff);
-  });
-  $('#cloudDisconnect').onclick = () => { cfg = { url: cfg.url || DEFAULT_URL, pin: '', staff: '' }; saveCfg(); rows = null; list = []; api.stockChanged(); render(); $('#cloudConnMsg').textContent = 'Đã ngắt kết nối trên máy này.'; };
+  const reloadCatalog = () => run($('#reloadCatalog'), async () => { await loadAll(); api.tell('Đã tải lại bảng giá và tồn kho từ hệ thống.'); });
+  $('#reloadCatalog').onclick = reloadCatalog;
+  $('#logoutBtn2').onclick = () => logout();
+  const note = document.createElement('p'); note.className = 'catalog-cloud-note';
+  note.innerHTML = 'Bảng giá quản lý trên Google Sheet <b>STC_BaoGia_Data → tab DanhMuc</b>. Sửa giá ở đó rồi bấm “↻ Tải lại bảng giá & tồn kho” (tab Công ty).';
+  document.querySelector('#catalog .page-heading')?.after(note);
 
   /* ---------- UI: Soạn báo giá ---------- */
   const panel = document.createElement('section'); panel.className = 'card cloud-panel';
@@ -127,7 +159,6 @@ export function installCloud(api) {
   <p class="muted">Tự ghi khi đặt cọc bị thiếu hàng, hoặc sau khi cọc mà tồn hết / dưới mức tối thiểu. Kế toán xử lý ở tab <b>DeXuatNhap</b> trên Google Sheet (đổi Trạng thái thành “Đã đặt hàng”, “Đã nhập” hoặc “Bỏ qua”).</p>
   <div class="table-scroll"><table class="data-table"><thead><tr><th>Thời gian</th><th>Loại</th><th>Hàng</th><th>Cần</th><th>Tồn</th><th>Thiếu</th><th>Đề xuất nhập</th><th>Báo giá · khách</th><th>Trạng thái</th></tr></thead><tbody id="alertRows"></tbody></table></div>`;
   $('#history').insertBefore(warnBox, $('#savedList'));
-  let alerts = [];
   async function loadAlerts() { if (!connected()) return; const d = await call('alerts'); alerts = d.alerts || []; renderAlerts(); }
   function renderAlerts() {
     $('#alertCount').textContent = alerts.length + ' việc';
@@ -161,8 +192,8 @@ export function installCloud(api) {
   function render() {
     if (api.state().id !== lastId) { lastId = api.state().id; delete $('#cloudAmount').dataset.touched; }
     document.body.classList.toggle('cloud-on', connected());
-    $('#cloudURL').value = cfg.url || ''; if (!$('#cloudPin').matches(':focus')) $('#cloudPin').value = cfg.pin || '';
-    if (connected() && !$('#cloudConnMsg').textContent) $('#cloudConnMsg').textContent = '✓ Đang kết nối: ' + cfg.staff;
+    $('#userName').textContent = connected() ? '👤 ' + cfg.staff : '';
+    $('#cloudConnMsg').textContent = connected() ? '✓ Đang đăng nhập: ' + cfg.staff + ' (tự đăng xuất khi sang ngày mới)' : 'Chưa đăng nhập.';
     const q = api.state(), c = info(), on = connected(), lock = locked();
     $('#cloudStatus').textContent = !on ? 'Chưa kết nối' : c ? c.status : 'Chưa lưu lên hệ thống';
     $('#cloudStatus').className = 'badge cloud-badge s-' + STATUSES.indexOf(c?.status);
@@ -184,6 +215,7 @@ export function installCloud(api) {
   $('#cloudAmount').oninput = ev => { ev.target.dataset.touched = '1'; };
 
   render(); renderList(); renderAlerts();
-  if (connected()) { loadStock().then(loadList).then(loadAlerts).catch(err => api.tell('Hệ thống chung: ' + err.message)); }
-  return { stock: () => (connected() ? rows : null), locked, render, refresh: () => run(null, async () => { await loadStock(); await loadList(); }) };
+  if (connected()) { showGate(false); loadAll().catch(err => api.tell('Hệ thống chung: ' + err.message + ' — đang dùng bảng giá đã tải trước đó.')); }
+  else showGate(true);
+  return { stock: () => (connected() ? rows : null), locked, render, reloadCatalog };
 }
