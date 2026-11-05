@@ -140,3 +140,38 @@ select{text-overflow:ellipsis}
 
 .quote-deposit{display:flex;justify-content:space-between;align-items:center;padding:10px;margin-top:6px;background:#eef4ff;border-left:4px solid #1762de;font-size:13px;font-weight:700;color:#061b49}.quote-deposit strong{font-size:17px;color:#1762de}.quote-rest{color:#66748b}
 .cloud-warranty .variant-filters{align-items:end}.cloud-warranty #warrantyMsg{margin:8px 0}
+
+/* ===== Đầu báo giá mẫu C1 (05/11/2026): khối trắng cong elip chứa logo + nền xanh sáng + viền cam mềm ===== */
+.quote{container-type:inline-size}
+.quote .quote-head.c1,#exportRoot .quote .quote-head.c1{display:block;position:relative;overflow:hidden;min-height:190px;padding:0;border-bottom:0;color:#fff;
+  background:radial-gradient(120% 140% at 100% 0%,#2a7bff 0%,#1762de 45%,#0b3ea8 100%)}
+.quote .quote-head.c1:after{content:"";position:absolute;right:-80px;top:-90px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18),rgba(255,255,255,0) 70%);pointer-events:none}
+.quote-head.c1 .qh-glow,.quote-head.c1 .qh-glow2,.quote-head.c1 .qh-left{position:absolute;left:-40px;top:-30px;bottom:-30px;border-radius:0 50% 50% 0/0 50% 50% 0}
+.quote-head.c1 .qh-glow2{width:332px;background:linear-gradient(180deg,#ffd9b0,#ffc58a 55%,#ffd9b0)}
+.quote-head.c1 .qh-glow{width:322px;background:linear-gradient(180deg,#ffb15c,#f87919 55%,#ff9a3c);box-shadow:0 0 22px 6px rgba(248,121,25,.45)}
+.quote-head.c1 .qh-left{width:310px;background:#fff}
+.quote-head.c1 .qh-logo{position:absolute;left:30px;top:28px;width:150px;text-align:center;z-index:2}
+.quote .quote-head.c1 .qh-logo img,#exportRoot .quote .quote-head.c1 .qh-logo img{width:150px;height:100px;object-fit:contain;border-radius:12px;box-shadow:0 6px 16px rgba(6,27,73,.25);display:block}
+.quote .quote-head.c1 .quote-brand,#exportRoot .quote .quote-head.c1 .quote-brand{font-size:11.5px;line-height:1.45;margin:9px 0 0;color:#0b3ea8;font-weight:700;letter-spacing:0}
+.quote-head.c1 .quote-info{position:relative;z-index:2;margin-left:300px;padding:26px 64px 24px 10px}
+.quote .quote-head.c1 .quote-info h3,#exportRoot .quote .quote-head.c1 .quote-info h3{margin:0 0 8px;font-size:18px;letter-spacing:.2px;color:#fff}
+.quote .quote-head.c1 .quote-info p,#exportRoot .quote .quote-head.c1 .quote-info p{margin:2px 0;font-size:13px;color:#e6eeff}
+.quote-head.c1 .fpt-word{margin-top:10px;font-size:19px;color:#fff}.quote-head.c1 .fpt-word b{color:#ffb15c}
+.quote-head.c1 .gate-word{color:#ffb15c}.quote-head.c1 .gate-word span{color:#fff}
+.quote .qh-foot{height:6px;background:linear-gradient(90deg,#f87919 0%,#ffb15c 40%,rgba(248,121,25,.15) 100%);border-radius:0 0 6px 6px}
+/* Khung xem trước hẹp (điện thoại) */
+@container (max-width:560px){
+  .quote .quote-head.c1{min-height:150px}
+  .quote-head.c1 .qh-glow2{width:214px}.quote-head.c1 .qh-glow{width:206px}.quote-head.c1 .qh-left{width:198px}
+  .quote-head.c1 .qh-logo{left:16px;top:18px;width:104px}
+  .quote .quote-head.c1 .qh-logo img{width:104px;height:70px;border-radius:9px}
+  .quote .quote-head.c1 .quote-brand{font-size:9px}
+  .quote-head.c1 .quote-info{margin-left:180px;padding:16px 14px 16px 6px}
+  .quote .quote-head.c1 .quote-info h3{font-size:13px}.quote .quote-head.c1 .quote-info p{font-size:10.5px}.quote-head.c1 .fpt-word{font-size:14px;margin-top:6px}
+}
+
+/* Đường cam lượn phía phải (đối xứng vòng cung logo) */
+.quote-head.c1 .qh-arc{position:absolute;border-radius:50%;border:0 solid transparent;pointer-events:none;z-index:1}
+.quote-head.c1 .qh-arc1{right:-325px;top:-120px;width:400px;height:420px;border-left:4px solid #ffa24a;transform:rotate(-16deg)}
+.quote-head.c1 .qh-arc2{right:-350px;top:-90px;width:400px;height:400px;border-left:2px solid #ffd2a3;transform:rotate(-8deg)}
+@container (max-width:560px){.quote-head.c1 .qh-arc1{right:-282px;top:-110px;width:300px;height:330px;border-left-width:3px}.quote-head.c1 .qh-arc2{display:none}.quote-head.c1 .quote-info{padding-right:30px}}
