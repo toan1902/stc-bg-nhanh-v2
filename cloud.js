@@ -258,5 +258,20 @@ export function installCloud(api) {
   render(); renderList(); renderAlerts();
   if (connected()) { showGate(false); loadAll().catch(err => api.tell('Hệ thống chung: ' + err.message + ' — đang dùng bảng giá đã tải trước đó.')); }
   else showGate(true);
-  return { stock: () => (connected() ? rows : null), locked, render, reloadCatalog };
+  // Tự lưu lên hệ thống chung khi nhân viên bấm "Lưu trên máy" hoặc xuất PDF/ảnh/Excel → cả công ty đều thấy
+  let autoBusy = false;
+  async function autoSave(reason) {
+    if (!connected() || locked() || busy || autoBusy) return;
+    const q = api.state(); if (!q.items.length) return;
+    autoBusy = true;
+    try {
+      const d = await call('save', { quote: payload(-1) }); apply(d);
+      msg(`✓ Đã tự lưu lên hệ thống chung (${reason}) lúc ${d.updatedAt} — trạng thái: ${d.status}. Cả công ty đã xem được.`);
+      loadList().catch(() => {});
+    } catch (err) {
+      msg(`⚠ Chưa tự lưu được lên hệ thống chung (${reason}): ${err.message}\nBấm "Lưu lên hệ thống" để thử lại.`, true);
+      api.tell('Chưa lưu được lên hệ thống chung — ' + err.message.split('\n')[0]);
+    } finally { autoBusy = false; }
+  }
+  return { stock: () => (connected() ? rows : null), locked, render, reloadCatalog, autoSave };
 }
