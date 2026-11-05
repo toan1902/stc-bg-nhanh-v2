@@ -100,13 +100,22 @@ export function installCloud(api) {
   panel.innerHTML = `<div class="card-title"><h2><span class="step" id="cloudStep">05</span> Hệ thống chung · Đặt cọc & kho</h2><span id="cloudStatus" class="badge">Chưa kết nối</span></div>
   <p id="cloudInfo" class="muted"></p>
   <div class="cloud-actions"><button id="cloudSave" class="primary">Lưu lên hệ thống</button><button id="cloudSent">Đánh dấu đã gửi khách</button></div>
-  <div class="cloud-deposit"><label id="cloudChosenWrap">Phương án khách chọn<select id="cloudChosen"></select></label><label>Số tiền cọc (đ)<input id="cloudAmount" type="number" min="0" step="1000"></label><button id="cloudDeposit" class="primary">Đặt cọc & trừ kho</button></div>
+  <div class="cloud-deposit"><label id="cloudChosenWrap">Phương án khách chọn<select id="cloudChosen"></select></label><label>Cọc theo %<input id="cloudPct" type="number" min="0" max="100" step="1" value="20"></label><label>Số tiền cọc (đ)<input id="cloudAmount" type="number" min="0" step="1000"></label><button id="cloudDeposit" class="primary">Đặt cọc & trừ kho</button><p id="cloudPctHint" class="cloud-pct-hint"></p></div>
   <div class="cloud-actions"><button id="cloudComplete">Hoàn tất (đã giao, đã thu đủ)</button><button id="cloudCancel" class="danger">Hủy báo giá · hoàn kho nếu đã cọc</button></div>
   <p id="cloudMsg" role="status" style="white-space:pre-wrap"></p>`;
   $('.editor-column').append(panel);
 
-  $('#cloudChosen').onchange = () => { $('#cloudAmount').value = suggestDeposit(); };
-  function suggestDeposit() { const q = api.state(); const c = Number($('#cloudChosen').value); const base = q.mode === 'options' ? (c >= 0 ? api.amount(q.items[c]) : 0) : api.totals(q).total; return Math.round(base * 0.2 / 1000) * 1000; }
+  $('#cloudChosen').onchange = () => { delete $('#cloudAmount').dataset.touched; $('#cloudAmount').value = suggestDeposit(); showPctHint(); };
+  // Cọc theo %: ô % và ô số tiền liên kết hai chiều (mặc định 20%)
+  function depositBase() { const q = api.state(), v = $('#cloudChosen').value, c = Number(v); return q.mode === 'options' ? (v !== '' && c >= 0 && q.items[c] ? api.amount(q.items[c]) : 0) : api.totals(q).total; }
+  function depositPct() { const p = Number($('#cloudPct').value); return Number.isFinite(p) && p >= 0 ? Math.min(p, 100) : 20; }
+  function suggestDeposit() { return Math.round(depositBase() * depositPct() / 100 / 1000) * 1000; }
+  function pctOf(amount, base) { return base > 0 ? Math.round(amount / base * 1000) / 10 : 0; }
+  function fmtPct(p) { return String(p).replace('.', ',') + '%'; }
+  function showPctHint() {
+    const base = depositBase(), amt = Number($('#cloudAmount').value) || 0;
+    $('#cloudPctHint').textContent = base > 0 ? `Cọc ${api.money(amt)} = ${fmtPct(pctOf(amt, base))} tổng ${api.money(base)} · còn lại ${api.money(Math.max(base - amt, 0))}` : '';
+  }
 
   $('#cloudSave').onclick = () => run($('#cloudSave'), async () => {
     const q = payload(-1); if (!q.items.length) throw Error('Thêm sản phẩm trước khi lưu.');
@@ -129,12 +138,12 @@ export function installCloud(api) {
       const s = rows?.find(r => r.id === i.productId && r.unit === i.unit);
       return s ? `• ${i.name}: trừ ${api.number(i.quantity)} ${i.unit}, tồn ${api.number(s.quantity)} → ${api.number(s.quantity - i.quantity)}` : `• ${i.name}: không theo dõi tồn — không trừ kho`;
     }).join('\n') || '• Không có hàng theo dõi tồn.';
-    if (!await api.confirm('Đặt cọc & trừ kho?', `${q.number} · ${q.customer || 'Chưa có tên khách'}\nTiền cọc: ${api.money(amount)}${q.mode === 'options' ? '\nPhương án ' + (chosen + 1) + ': ' + q.items[chosen].name : ''}\n${text}\nSau khi cọc, báo giá bị khóa (muốn sửa phải nhân bản).`)) return;
+    if (!await api.confirm('Đặt cọc & trừ kho?', `${q.number} · ${q.customer || 'Chưa có tên khách'}\nTiền cọc: ${api.money(amount)} (${fmtPct(pctOf(amount, depositBase()))} tổng ${api.money(depositBase())})${q.mode === 'options' ? '\nPhương án ' + (chosen + 1) + ': ' + q.items[chosen].name : ''}\n${text}\nSau khi cọc, báo giá bị khóa (muốn sửa phải nhân bản).`)) return;
     let d;
     try { d = await call('deposit', { quote: payload(chosen), amount, chosen: chosen >= 0 ? chosen : undefined }); }
     catch (err) { loadAlerts().catch(() => {}); throw err; }
     apply(d, { deposit: amount, depositBy: cfg.staff, slip: d.slip, chosen: chosen >= 0 ? 'Phương án ' + (chosen + 1) : '' });
-    msg(`✓ Đã đặt cọc ${api.money(amount)}. ` + (d.slip ? `Phiếu ${d.slip}: trừ ${d.deducted} mã hàng.` : 'Không có hàng theo dõi tồn nên không trừ kho.') + (d.untracked?.length ? '\nKhông theo dõi tồn: ' + d.untracked.join(', ') : '') + (d.alerts?.length ? '\n⚠ ' + d.alerts.join('\n⚠ ') + '\n→ Đã ghi đề xuất nhập hàng cho kế toán.' : ''));
+    msg(`✓ Đã đặt cọc ${api.money(amount)} (${fmtPct(pctOf(amount, depositBase()))}). ` + (d.slip ? `Phiếu ${d.slip}: trừ ${d.deducted} mã hàng.` : 'Không có hàng theo dõi tồn nên không trừ kho.') + (d.untracked?.length ? '\nKhông theo dõi tồn: ' + d.untracked.join(', ') : '') + (d.alerts?.length ? '\n⚠ ' + d.alerts.join('\n⚠ ') + '\n→ Đã ghi đề xuất nhập hàng cho kế toán.' : ''));
     loadList(); loadAlerts();
   });
   $('#cloudComplete').onclick = () => run($('#cloudComplete'), async () => {
@@ -187,12 +196,12 @@ export function installCloud(api) {
     const view = list.filter(q => (!st || q.status === st) && (!sf || q.preparedBy === sf) && (!f || api.fold(q.customer + ' ' + q.number + ' ' + q.phone).includes(f)));
     const count = s => list.filter(q => q.status === s).length;
     $('#cloudSummary').textContent = connected() ? STATUSES.map(s => `${s}: ${count(s)}`).join(' · ') : 'Chưa kết nối hệ thống chung (tab Công ty).';
-    $('#cloudRows').innerHTML = view.map(q => `<article class="saved-card"><div><h2>${e(q.customer || 'Chưa có tên khách')} <span class="cloud-badge s-${STATUSES.indexOf(q.status)}">${e(q.status)}</span></h2><p class="muted">${e(q.number)} · ${e(q.date)} · Lập: ${e(q.preparedBy)}${q.status === 'Đặt cọc' || q.status === 'Hoàn tất' ? ` · Cọc ${api.money(Number(q.deposit) || 0)} (${e(q.depositBy)} ${e(q.depositAt)})${q.slip ? ' · ' + e(q.slip) : ''}${q.chosen ? ' · ' + e(q.chosen) : ''}` : ''} · Cập nhật ${e(q.updatedAt)} bởi ${e(q.updatedBy)}</p><strong>${q.total ? api.money(Number(q.total)) : (q.mode === 'Phương án lựa chọn' ? 'Phương án' : '')}</strong></div><div class="heading-actions"><button data-cloud-open="${e(q.id)}">Mở</button></div></article>`).join('') || (connected() ? '<div class="empty">Chưa có báo giá nào trên hệ thống.</div>' : '');
+    $('#cloudRows').innerHTML = view.map(q => `<article class="saved-card"><div><h2>${e(q.customer || 'Chưa có tên khách')} <span class="cloud-badge s-${STATUSES.indexOf(q.status)}">${e(q.status)}</span></h2><p class="muted">${e(q.number)} · ${e(q.date)} · Lập: ${e(q.preparedBy)}${q.status === 'Đặt cọc' || q.status === 'Hoàn tất' ? ` · Cọc ${api.money(Number(q.deposit) || 0)}${Number(q.total) > 0 ? ' = ' + fmtPct(pctOf(Number(q.deposit) || 0, Number(q.total))) : ''} (${e(q.depositBy)} ${e(q.depositAt)})${q.slip ? ' · ' + e(q.slip) : ''}${q.chosen ? ' · ' + e(q.chosen) : ''}` : ''} · Cập nhật ${e(q.updatedAt)} bởi ${e(q.updatedBy)}</p><strong>${q.total ? api.money(Number(q.total)) : (q.mode === 'Phương án lựa chọn' ? 'Phương án' : '')}</strong></div><div class="heading-actions"><button data-cloud-open="${e(q.id)}">Mở</button></div></article>`).join('') || (connected() ? '<div class="empty">Chưa có báo giá nào trên hệ thống.</div>' : '');
   }
 
   let lastId = null;
   function render() {
-    if (api.state().id !== lastId) { lastId = api.state().id; delete $('#cloudAmount').dataset.touched; }
+    if (api.state().id !== lastId) { lastId = api.state().id; delete $('#cloudAmount').dataset.touched; $('#cloudPct').value = 20; }
     document.body.classList.toggle('cloud-on', connected()); $('#cloudStep').textContent = connected() ? '04' : '05';
     $('#userName').textContent = connected() ? '👤 ' + cfg.staff : '';
     $('#cloudConnMsg').textContent = connected() ? '✓ Đang đăng nhập: ' + cfg.staff + ' (tự đăng xuất khi sang ngày mới)' : 'Chưa đăng nhập.';
@@ -200,13 +209,16 @@ export function installCloud(api) {
     $('#cloudStatus').textContent = !on ? 'Chưa kết nối' : c ? c.status : 'Chưa lưu lên hệ thống';
     $('#cloudStatus').className = 'badge cloud-badge s-' + STATUSES.indexOf(c?.status);
     $('#cloudInfo').textContent = !on ? 'Vào tab Công ty → Kết nối hệ thống chung để lưu báo giá dùng chung và đặt cọc trừ kho.'
-      : (c ? `Cập nhật ${c.updatedAt || ''} bởi ${c.updatedBy || ''}` + (c.deposit !== undefined && c.deposit !== '' ? ` · Cọc ${api.money(Number(c.deposit) || 0)} · ${c.slip || ''} ${c.chosen || ''}` : '') : 'Báo giá này mới nằm trên máy. Bấm "Lưu lên hệ thống" để cả công ty thấy.') + ` · Đang dùng: ${cfg.staff}` + (lock ? '\n⚠ Báo giá đã khóa trên hệ thống. Muốn sửa: Tạo mới hoặc Nhân bản ở tab Đã lưu.' : '');
+      : (c ? `Cập nhật ${c.updatedAt || ''} bởi ${c.updatedBy || ''}` + (c.deposit !== undefined && c.deposit !== '' ? ` · Cọc ${api.money(Number(c.deposit) || 0)}${depositBase() > 0 ? ' = ' + fmtPct(pctOf(Number(c.deposit) || 0, depositBase())) : ''} · ${c.slip || ''} ${c.chosen || ''}` : '') : 'Báo giá này mới nằm trên máy. Bấm "Lưu lên hệ thống" để cả công ty thấy.') + ` · Đang dùng: ${cfg.staff}` + (lock ? '\n⚠ Báo giá đã khóa trên hệ thống. Muốn sửa: Tạo mới hoặc Nhân bản ở tab Đã lưu.' : '');
     const opts = q.mode === 'options';
     $('#cloudChosenWrap').style.display = opts ? '' : 'none';
     const sel = $('#cloudChosen'), prevSel = sel.value;
     sel.innerHTML = '<option value="">— Chọn —</option>' + q.items.map((i, n) => `<option value="${n}">Phương án ${n + 1}: ${e(i.name).slice(0, 60)} · ${api.money(api.amount(i))}</option>`).join('');
     sel.value = [...sel.options].some(o => o.value === prevSel) ? prevSel : '';
     if (!$('#cloudAmount').matches(':focus') && !$('#cloudAmount').dataset.touched) $('#cloudAmount').value = suggestDeposit() || '';
+    else if ($('#cloudAmount').dataset.touched && !$('#cloudPct').matches(':focus')) $('#cloudPct').value = pctOf(Number($('#cloudAmount').value) || 0, depositBase());
+    $('#cloudPct').disabled = !on || lock || busy;
+    showPctHint();
     const st = c?.status;
     $('#cloudSave').disabled = !on || lock || busy;
     $('#cloudSent').disabled = !on || lock || st === 'Đã gửi khách' || busy;
@@ -214,7 +226,8 @@ export function installCloud(api) {
     $('#cloudComplete').disabled = !on || st !== 'Đặt cọc' || busy;
     $('#cloudCancel').disabled = !on || !c || st === 'Hủy' || st === 'Hoàn tất' || busy;
   }
-  $('#cloudAmount').oninput = ev => { ev.target.dataset.touched = '1'; };
+  $('#cloudAmount').oninput = ev => { ev.target.dataset.touched = '1'; $('#cloudPct').value = pctOf(Number(ev.target.value) || 0, depositBase()); showPctHint(); };
+  $('#cloudPct').oninput = () => { delete $('#cloudAmount').dataset.touched; $('#cloudAmount').value = suggestDeposit() || ''; showPctHint(); };
 
   render(); renderList(); renderAlerts();
   if (connected()) { showGate(false); loadAll().catch(err => api.tell('Hệ thống chung: ' + err.message + ' — đang dùng bảng giá đã tải trước đó.')); }
