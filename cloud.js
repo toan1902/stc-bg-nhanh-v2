@@ -29,7 +29,7 @@ export function installCloud(api) {
   async function run(btn, fn) {
     if (busy) return; busy = true; const all = [...document.querySelectorAll('.cloud-panel button,.cloud-list button')]; all.forEach(b => b.disabled = true);
     const old = btn?.textContent; if (btn) btn.textContent = 'Đang xử lý…';
-    try { await fn(); } catch (err) { msg(err.message, true); api.tell(err.message.split('\n')[0]); } finally { busy = false; if (btn) btn.textContent = old; render(); }
+    try { await fn(); } catch (err) { msg(err.message, true); api.tell(err.message.split('\n')[0]); } finally { busy = false; if (btn) btn.textContent = old; all.forEach(b => { if (b.isConnected && b.closest('.cloud-list')) b.disabled = false; }); render(); }
   }
   function msg(t, bad) { const m = $('#cloudMsg'); if (m) { m.textContent = t; m.className = bad ? 'error' : 'stock-ok'; } }
 
@@ -148,8 +148,13 @@ export function installCloud(api) {
     loadList(); loadAlerts();
   });
   $('#cloudComplete').onclick = () => run($('#cloudComplete'), async () => {
-    if (!await api.confirm('Hoàn tất báo giá?', 'Xác nhận đã giao hàng/thi công và thu đủ tiền.')) return;
-    const d = await call('complete', { id: api.state().id }); apply(d); msg('✓ Đã hoàn tất.'); loadList();
+    const q = api.state();
+    if (!await api.confirm('Hoàn tất báo giá?', `Xác nhận đã giao hàng/thi công và THU ĐỦ TIỀN.\n${q.number} · ${q.customer || 'Chưa có tên khách'} · ${q.phone || 'chưa có SĐT'}\nHệ thống sẽ lưu khách hàng (tab KhachHang) và tạo phiếu bảo hành cho từng thiết bị (tab BaoHanh) theo ô Bảo hành: "${q.warranty || 'mặc định 12 tháng'}".`)) return;
+    const d = await call('complete', { id: q.id }); apply(d);
+    const w = d.warranty, c = d.customer;
+    msg('✓ Đã hoàn tất.' + (w ? (w.count ? `\n✓ Đã tạo ${w.count} phiếu bảo hành ${w.months} tháng: ${w.start} → ${w.end}.` : '\n' + (w.note || '')) : '\n⚠ Hệ thống chưa lưu bảo hành: Apps Script trên Google Sheet chưa được cập nhật bản mới.')
+      + (c ? `\n✓ ${c.isNew ? 'Đã thêm khách hàng mới' : 'Đã cập nhật khách hàng cũ'} · ${c.orders} đơn · tổng đã mua ${api.money(Number(c.total) || 0)}.` : ''));
+    loadList();
   });
   $('#cloudCancel').onclick = () => run($('#cloudCancel'), async () => {
     const st = info()?.status;
@@ -164,6 +169,25 @@ export function installCloud(api) {
   <div class="variant-filters"><label>Trạng thái<select id="cloudFStatus"><option value="">Tất cả</option>${STATUSES.map(s => `<option>${s}</option>`).join('')}</select></label><label>Nhân viên<select id="cloudFStaff"><option value="">Tất cả</option></select></label><label>Tìm khách / số báo giá<input id="cloudFind"></label></div>
   <div id="cloudSummary" class="muted"></div><div id="cloudRows" class="saved-list"></div>`;
   $('#history').insertBefore(box, $('#savedList'));
+
+  // Tra cứu bảo hành (tab BaoHanh, tạo khi bấm Hoàn tất)
+  const wBox = document.createElement('section'); wBox.className = 'card cloud-warranty';
+  wBox.innerHTML = `<div class="card-title"><h2>🛡 Tra cứu bảo hành</h2></div>
+  <p class="muted">Nhập số điện thoại, tên khách, số báo giá hoặc mã bảo hành. Phiếu bảo hành tự tạo khi báo giá được bấm “Hoàn tất (đã giao, đã thu đủ)”.</p>
+  <div class="variant-filters"><label>Tìm bảo hành<input id="warrantyFind" placeholder="VD: 0949496420 hoặc BG-STC-..."></label><button id="warrantyGo" class="primary">Tra cứu</button></div>
+  <div id="warrantyMsg" class="muted"></div>
+  <div class="table-scroll"><table class="data-table"><thead><tr><th>Mã BH</th><th>Thiết bị</th><th>SL</th><th>Khách · SĐT</th><th>Số báo giá</th><th>Từ ngày</th><th>Đến ngày</th><th>Tình trạng</th></tr></thead><tbody id="warrantyRows"></tbody></table></div>`;
+  $('#history').insertBefore(wBox, $('#savedList'));
+  async function lookupWarranty() {
+    const qv = $('#warrantyFind').value.trim(); if (!qv) { $('#warrantyMsg').textContent = 'Nhập SĐT, tên khách hoặc số báo giá.'; return; }
+    let d; try { d = await call('warranty', { query: qv }); }
+    catch (err) { $('#warrantyMsg').textContent = /không hợp lệ/i.test(err.message) ? 'Apps Script trên Google Sheet chưa được cập nhật bản có bảo hành.' : err.message; $('#warrantyRows').innerHTML = ''; return; }
+    const rs = d.rows || [];
+    $('#warrantyMsg').textContent = rs.length ? `Tìm thấy ${rs.length} thiết bị (${rs.filter(r => r.status === 'Còn hạn').length} còn hạn).` : 'Không tìm thấy phiếu bảo hành nào.';
+    $('#warrantyRows').innerHTML = rs.map(r => `<tr><td>${e(r.code)}</td><td>${e(r.name)}<br><small class="muted">${e(r.productId || '')} · ${e(r.terms || '')}</small></td><td>${e(r.quantity)} ${e(r.unit)}</td><td>${e(r.customer)}<br><small class="muted">${e(r.phone)}</small></td><td>${e(r.number)}</td><td>${e(r.start)}</td><td>${e(r.end)}</td><td><b class="${r.status === 'Còn hạn' ? 'stock-ok' : 'stock-danger'}">${e(r.status)}</b></td></tr>`).join('');
+  }
+  $('#warrantyGo').onclick = () => run($('#warrantyGo'), lookupWarranty);
+  $('#warrantyFind').onkeydown = ev => { if (ev.key === 'Enter') { ev.preventDefault(); run($('#warrantyGo'), lookupWarranty); } };
 
   // Cảnh báo tồn kho & đề xuất nhập hàng (tab DeXuatNhap trên Sheet)
   const warnBox = document.createElement('section'); warnBox.className = 'card cloud-alerts';

@@ -25,13 +25,15 @@ var SHEETS = {
   DoiChieu: ['Dòng NXT', 'Mã hàng', 'Tên hàng', 'Tồn nguồn', 'Lý do chưa nhập'],
   DeXuatNhap: ['Thời gian', 'Loại cảnh báo', 'Mã báo giá (ID)', 'Số báo giá', 'Khách hàng', 'Nhân viên', 'Mã hàng', 'Tên hàng', 'ĐVT', 'Cần', 'Tồn hiện tại', 'Thiếu', 'Tồn tối thiểu', 'Đề xuất nhập', 'Trạng thái', 'Ghi chú xử lý'],
   DanhMuc: ['Mã hàng', 'Tên hàng', 'ĐVT', 'Đơn giá (sau VAT)', 'Nhóm', 'Ghi chú'],
-  CauHinh: ['Khóa', 'Giá trị (JSON — sửa cẩn thận)', 'Ghi chú']
+  CauHinh: ['Khóa', 'Giá trị (JSON — sửa cẩn thận)', 'Ghi chú'],
+  KhachHang: ['Số điện thoại', 'Khách hàng', 'Địa chỉ', 'Số đơn hoàn tất', 'Tổng đã mua (đ)', 'Lần mua đầu', 'Lần mua gần nhất', 'Số báo giá gần nhất', 'Người phụ trách', 'Ghi chú'],
+  BaoHanh: ['Mã bảo hành', 'Ngày bắt đầu', 'Ngày hết hạn', 'Thời hạn (tháng)', 'Mã báo giá (ID)', 'Số báo giá', 'Khách hàng', 'Điện thoại', 'Địa chỉ', 'STT', 'Mã hàng', 'Tên hàng', 'ĐVT', 'Số lượng', 'Điều kiện bảo hành', 'Người chốt', 'Ghi chú xử lý']
 };
 // Trạng thái đề xuất nhập: kế toán đổi tay trên Sheet
 var ALERT_OPEN = 'Chờ xử lý', ALERT_DONE = ['Đã nhập', 'Bỏ qua'];
 // Cột (bắt đầu từ 0) của tab BaoGia
 // Cột để dạng chữ (tránh Google Sheet tự đổi ngày giờ, mã hàng, số điện thoại)
-var TEXT_COLS = {BaoGia: ['A', 'B', 'C', 'E', 'M', 'Q'], ChiTiet: ['A', 'B', 'D'], Kho: ['A', 'E'], PhieuXuat: ['A', 'B', 'D', 'E', 'G'], DeXuatNhap: ['A', 'C', 'D', 'G'], DanhMuc: ['A'], CauHinh: ['A', 'B']};
+var TEXT_COLS = {BaoGia: ['A', 'B', 'C', 'E', 'M', 'Q'], ChiTiet: ['A', 'B', 'D'], Kho: ['A', 'E'], PhieuXuat: ['A', 'B', 'D', 'E', 'G'], DeXuatNhap: ['A', 'C', 'D', 'G'], DanhMuc: ['A'], CauHinh: ['A', 'B'], KhachHang: ['A', 'F', 'G', 'H'], BaoHanh: ['A', 'B', 'C', 'E', 'F', 'H', 'K']};
 
 // Tạo tab / bổ sung cột tiêu đề còn thiếu (dùng cho cả file đã khởi tạo từ bản trước)
 function ensureSheet(name) {
@@ -236,7 +238,8 @@ var ACTIONS = {
   get: function (req) { return {quote: getQuote(req.id)}; },
   save: function (req, staff) { return withLock(function () { return saveQuote(req.quote, staff, null); }); },
   sent: function (req, staff) { return withLock(function () { return setStatus(req.id, 'Đã gửi khách', ['Nháp'], staff); }); },
-  complete: function (req, staff) { return withLock(function () { return setStatus(req.id, 'Hoàn tất', ['Đặt cọc'], staff); }); },
+  complete: function (req, staff) { return withLock(function () { return complete(req, staff); }); },
+  warranty: function (req) { return {rows: findWarranty(req.query)}; },
   deposit: function (req, staff) { return withLock(function () { return deposit(req, staff); }); },
   cancel: function (req, staff) { return withLock(function () { return cancel(req, staff); }); }
 };
@@ -470,4 +473,75 @@ function cancel(req, staff) {
   sh.getRange(row, B.status + 1).setValue('Hủy');
   sh.getRange(row, B.updatedAt + 1, 1, 3).setValues([[now, staff, note]]);
   return {status: 'Hủy', returned: returned, rows: readKho().list};
+}
+
+
+/* ============================ Hoàn tất → Khách hàng & Bảo hành ============================ */
+
+// "Bảo hành 12 tháng" / "2 năm" / "24 tháng" → số tháng; mặc định 12
+function warrantyMonths(t) {
+  t = String(t || '').toLowerCase();
+  var m = t.match(/(\d+(?:[.,]\d+)?)\s*(tháng|thang)/); if (m) return Math.round(Number(m[1].replace(',', '.')));
+  m = t.match(/(\d+(?:[.,]\d+)?)\s*(năm|nam)/); if (m) return Math.round(Number(m[1].replace(',', '.')) * 12);
+  return 12;
+}
+function phoneKey(v) { return String(v || '').replace(/\D/g, ''); }
+function fmtDate(d) { return Utilities.formatDate(d, TZ, 'dd/MM/yyyy'); }
+function parseDate(v) {
+  if (v instanceof Date) return v;
+  var m = String(v || '').match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  return m ? new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1])) : null;
+}
+
+// Hoàn tất (đã giao, thu đủ): đổi trạng thái, lưu/ cập nhật khách hàng, tạo phiếu bảo hành cho từng dòng hàng
+function complete(req, staff) {
+  var sh = sheet('BaoGia'), row = findRow(sh, req.id);
+  if (!row) throw new Error('Báo giá chưa lưu lên hệ thống.');
+  var r = sh.getRange(row, 1, 1, SHEETS.BaoGia.length).getValues()[0];
+  if (r[B.status] !== 'Đặt cọc') throw new Error('Không chuyển được từ "' + r[B.status] + '" sang "Hoàn tất".');
+  ensureSheet('KhachHang'); ensureSheet('BaoHanh');
+  var q = getQuote(req.id), bh = sheet('BaoHanh');
+  if (body(bh).some(function (x) { return String(x[4]) === String(req.id); })) { var done = setStatus(req.id, 'Hoàn tất', ['Đặt cọc'], staff); done.warranty = {count: 0, note: 'Báo giá này đã có phiếu bảo hành.'}; return done; }
+  var items = q.items;
+  if (q.mode === 'options') { var n = Number(String(r[B.chosen]).replace(/\D/g, '')) - 1; items = n >= 0 && items[n] ? [items[n]] : []; }
+  var total = Number(r[B.total]) || 0;
+  var months = warrantyMonths(q.warranty), start = new Date(), end = new Date(start.getTime()); end.setMonth(end.getMonth() + months);
+  var phone = String(q.phone || r[B.phone] || '').trim(), name = q.customer || r[B.customer] || '', addr = q.address || r[B.address] || '';
+  var rows = items.map(function (i, k) {
+    return [String(q.number || r[B.number]) + '-BH' + ('0' + (k + 1)).slice(-2), fmtDate(start), fmtDate(end), months, req.id, q.number || r[B.number], name, phone ? "'" + phone : '', addr,
+      k + 1, i.productId || '', i.name, i.unit, Number(i.quantity), q.warranty || ('Bảo hành ' + months + ' tháng'), staff, ''];
+  });
+  if (rows.length) bh.getRange(bh.getLastRow() + 1, 1, rows.length, rows[0].length).setValues(rows);
+  var res = setStatus(req.id, 'Hoàn tất', ['Đặt cọc'], staff);
+  res.customer = upsertCustomer({phone: phone, name: name, address: addr, number: q.number || r[B.number], total: total, preparedBy: q.preparedBy || r[B.preparedBy], date: fmtDate(start)});
+  res.warranty = {count: rows.length, months: months, start: fmtDate(start), end: fmtDate(end)};
+  return res;
+}
+
+function upsertCustomer(c) {
+  var sh = sheet('KhachHang'), key = phoneKey(c.phone), data = body(sh);
+  for (var i = 0; key && i < data.length; i++) {
+    if (phoneKey(data[i][0]) === key) {
+      var x = data[i], orders = (Number(x[3]) || 0) + 1, sum = (Number(x[4]) || 0) + c.total;
+      sh.getRange(i + 2, 2, 1, 8).setValues([[c.name || x[1], c.address || x[2], orders, sum, x[5] || c.date, c.date, c.number, c.preparedBy || x[8]]]);
+      return {isNew: false, orders: orders, total: sum};
+    }
+  }
+  sh.appendRow([c.phone ? "'" + c.phone : '', c.name, c.address, 1, c.total, c.date, c.date, c.number, c.preparedBy, '']);
+  return {isNew: true, orders: 1, total: c.total};
+}
+
+// Tra cứu bảo hành theo SĐT, tên khách, số báo giá hoặc mã bảo hành
+function findWarranty(query) {
+  var sh = SpreadsheetApp.getActive().getSheetByName('BaoHanh');
+  if (!sh) return [];
+  var qv = String(query || '').trim().toLowerCase(), key = phoneKey(qv), today = new Date(); today.setHours(0, 0, 0, 0);
+  if (!qv) return [];
+  return body(sh).filter(function (x) {
+    return (key.length >= 6 && phoneKey(x[7]).indexOf(key) >= 0) || [x[0], x[5], x[6]].some(function (v) { return String(v).toLowerCase().indexOf(qv) >= 0; });
+  }).slice(-200).map(function (x) {
+    var end = parseDate(x[2]);
+    return {code: cell(x[0]), start: cell(x[1]), end: cell(x[2]), months: x[3], number: x[5], customer: x[6], phone: String(x[7]), address: x[8],
+      productId: x[10], name: x[11], unit: x[12], quantity: x[13], terms: x[14], status: end ? (end >= today ? 'Còn hạn' : 'Hết hạn') : '', note: x[16]};
+  }).reverse();
 }
