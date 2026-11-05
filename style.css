@@ -196,3 +196,18 @@ select{text-overflow:ellipsis}
   .quote-head.c1 .qh-arc1{right:-286px;top:-100px;width:300px;height:310px;border-left-width:2px}
   .quote .quote-title{font-size:18px}
 }
+/* Giữ đủ 2 đường cam lượn ở mọi cỡ, chỉ thu nhỏ theo tỷ lệ (ghi đè các mức trên) */
+@container (min-width:561px) and (max-width:699px){
+  .quote-head.c1 .qh-arc1{right:-262px;top:-96px;width:322px;height:338px;border-left-width:3.5px}
+  .quote-head.c1 .qh-arc2{display:block;right:-282px;top:-72px;width:322px;height:322px;border-left-width:2px}
+}
+@container (min-width:421px) and (max-width:560px){
+  .quote-head.c1 .qh-arc1{right:-212px;top:-80px;width:262px;height:275px;border-left-width:3px}
+  .quote-head.c1 .qh-arc2{display:block;right:-229px;top:-60px;width:262px;height:262px;border-left-width:1.5px}
+  .quote-head.c1 .quote-info{padding-right:40px}
+}
+@container (max-width:420px){
+  .quote-head.c1 .qh-arc1{right:-164px;top:-62px;width:202px;height:212px;border-left-width:2.5px}
+  .quote-head.c1 .qh-arc2{display:block;right:-177px;top:-46px;width:202px;height:202px;border-left-width:1.5px}
+  .quote-head.c1 .quote-info{padding-right:40px}
+}
