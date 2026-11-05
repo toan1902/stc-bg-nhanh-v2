@@ -137,3 +137,5 @@ select{text-overflow:ellipsis}
   .downloads{grid-template-columns:1fr 1fr}
   .downloads .primary{grid-column:1/-1;order:-1}
 }
+
+.quote-deposit{display:flex;justify-content:space-between;align-items:center;padding:10px;margin-top:6px;background:#eef4ff;border-left:4px solid #1762de;font-size:13px;font-weight:700;color:#061b49}.quote-deposit strong{font-size:17px;color:#1762de}.quote-rest{color:#66748b}

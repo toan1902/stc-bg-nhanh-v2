@@ -105,10 +105,11 @@ export function installCloud(api) {
   <p id="cloudMsg" role="status" style="white-space:pre-wrap"></p>`;
   $('.editor-column').append(panel);
 
-  $('#cloudChosen').onchange = () => { delete $('#cloudAmount').dataset.touched; $('#cloudAmount').value = suggestDeposit(); showPctHint(); };
+  $('#cloudChosen').onchange = () => { api.state().depositAmount = null; render(); };
   // Cọc theo %: ô % và ô số tiền liên kết hai chiều (mặc định 20%)
   function depositBase() { const q = api.state(), v = $('#cloudChosen').value, c = Number(v); return q.mode === 'options' ? (v !== '' && c >= 0 && q.items[c] ? api.amount(q.items[c]) : 0) : api.totals(q).total; }
-  function depositPct() { const p = Number($('#cloudPct').value); return Number.isFinite(p) && p >= 0 ? Math.min(p, 100) : 20; }
+  function depositPct() { const v = api.state().depositPct, p = Number(v); return v == null || v === '' || !Number.isFinite(p) ? 20 : Math.min(Math.max(p, 0), 100); }
+  function currentDeposit() { const a = api.state().depositAmount; return a != null && a !== '' && Number.isFinite(Number(a)) ? Math.round(Number(a)) : suggestDeposit(); }
   function suggestDeposit() { return Math.round(depositBase() * depositPct() / 100 / 1000) * 1000; }
   function pctOf(amount, base) { return base > 0 ? Math.round(amount / base * 1000) / 10 : 0; }
   function fmtPct(p) { return String(p).replace('.', ',') + '%'; }
@@ -201,7 +202,7 @@ export function installCloud(api) {
 
   let lastId = null;
   function render() {
-    if (api.state().id !== lastId) { lastId = api.state().id; delete $('#cloudAmount').dataset.touched; $('#cloudPct').value = 20; }
+    if (api.state().id !== lastId) { lastId = api.state().id; }
     document.body.classList.toggle('cloud-on', connected()); $('#cloudStep').textContent = connected() ? '04' : '05';
     $('#userName').textContent = connected() ? '👤 ' + cfg.staff : '';
     $('#cloudConnMsg').textContent = connected() ? '✓ Đang đăng nhập: ' + cfg.staff + ' (tự đăng xuất khi sang ngày mới)' : 'Chưa đăng nhập.';
@@ -215,8 +216,8 @@ export function installCloud(api) {
     const sel = $('#cloudChosen'), prevSel = sel.value;
     sel.innerHTML = '<option value="">— Chọn —</option>' + q.items.map((i, n) => `<option value="${n}">Phương án ${n + 1}: ${e(i.name).slice(0, 60)} · ${api.money(api.amount(i))}</option>`).join('');
     sel.value = [...sel.options].some(o => o.value === prevSel) ? prevSel : '';
-    if (!$('#cloudAmount').matches(':focus') && !$('#cloudAmount').dataset.touched) $('#cloudAmount').value = suggestDeposit() || '';
-    else if ($('#cloudAmount').dataset.touched && !$('#cloudPct').matches(':focus')) $('#cloudPct').value = pctOf(Number($('#cloudAmount').value) || 0, depositBase());
+    if (!$('#cloudAmount').matches(':focus')) $('#cloudAmount').value = currentDeposit() || '';
+    if (!$('#cloudPct').matches(':focus')) $('#cloudPct').value = q.depositAmount != null && q.depositAmount !== '' ? pctOf(currentDeposit(), depositBase()) : depositPct();
     $('#cloudPct').disabled = !on || lock || busy;
     showPctHint();
     const st = c?.status;
@@ -226,8 +227,9 @@ export function installCloud(api) {
     $('#cloudComplete').disabled = !on || st !== 'Đặt cọc' || busy;
     $('#cloudCancel').disabled = !on || !c || st === 'Hủy' || st === 'Hoàn tất' || busy;
   }
-  $('#cloudAmount').oninput = ev => { ev.target.dataset.touched = '1'; $('#cloudPct').value = pctOf(Number(ev.target.value) || 0, depositBase()); showPctHint(); };
-  $('#cloudPct').oninput = () => { delete $('#cloudAmount').dataset.touched; $('#cloudAmount').value = suggestDeposit() || ''; showPctHint(); };
+  // Lưu % / số tiền cọc vào báo giá để in trên bản gửi khách (PDF, ảnh, Excel)
+  $('#cloudAmount').oninput = ev => { const q = api.state(); if (locked()) return; const v = ev.target.value; q.depositAmount = v === '' ? null : Math.max(Number(v) || 0, 0); q.depositPct = q.depositAmount == null ? depositPct() : pctOf(q.depositAmount, depositBase()); api.changed(); };
+  $('#cloudPct').oninput = ev => { const q = api.state(); if (locked()) return; const v = ev.target.value; q.depositPct = v === '' ? 0 : Math.min(Math.max(Number(v) || 0, 0), 100); q.depositAmount = null; api.changed(); };
 
   render(); renderList(); renderAlerts();
   if (connected()) { showGate(false); loadAll().catch(err => api.tell('Hệ thống chung: ' + err.message + ' — đang dùng bảng giá đã tải trước đó.')); }
